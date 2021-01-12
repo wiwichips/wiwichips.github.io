@@ -1,19 +1,19 @@
 html {
-  width: calc(100% / 2);
+  width: calc(100% / 5 * 4);
   height: 100%;
   min-height: 100%;
   margin: 0 auto;
   background-color: #000000;
   color: #f6ee31;
   font-family: "Actor", Times, serif;
-  background-image: url("https://www.uoguelph.ca/computing/sites/default/files/styles/large/public/Klotz%2C%20Greg%203568%20copy.jpg?itok=xrbeSzqq");
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/7/77/Frost_Building.jpg");
   background-repeat: repeat;
 }
 body {
   min-height: 90%;
   line-height: 1;
-  background-color: #5920de;
-  color: #f6ee31;
+  background-color: #000000d7;
+  color: #ffffff;
   font-family: "Actor", Times, serif;
 }
 a {
