@@ -1,0 +1,32 @@
+.rotate {
+  animation: rotation 8s infinite linear;
+  border: 30px solid green;
+  margin: auto; 
+  width: 50%;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+div {
+  text-align: center;
+}
+
+div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 800px;
+}
+
+body {
+  background-image: url("https://static.wikia.nocookie.net/jtohs-joke-towers/images/b/b6/Omegareme.gif/revision/latest?cb=20210122085841");
+  background-repeat: repeat;
+  background-size: 300px;
+}
