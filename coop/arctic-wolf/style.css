@@ -1,0 +1,99 @@
+html {
+  width: calc(100% / 5 * 4);
+  height: 100%;
+  min-height: 100%;
+  margin: 0 auto;
+  background-color: #FFFFFFFF;
+  color: #f6ee31;
+  font-family: "Actor", Times, serif;
+  background-image: url("https://www.tynker.com/minecraft/api/block?id=5ed4a8bb7e494c165f13cf5e&w=400&h=400&width=400&height=400&mode=contain&format=jpg&quality=75&cache=max&v=1590995186");
+  background-repeat: repeat;
+}
+body {
+  min-height: 90%;
+  line-height: 1;
+  background-color: #dc8adc;
+  color: #0e2439;
+  font-family: "Actor", Times, serif;
+}
+a {
+  text-decoration: underline;
+  cursor: pointer;
+  cursor: hand;
+  color: #f6ee31;
+  font-family: "Actor", Times, serif;
+}
+input[type=submit], button {
+  cursor: pointer;
+  cursor: hand;
+  background-color: white;
+  border-color: light grey;
+  color: #f6ee31;
+  font-family: "Actor", Times, serif;
+}
+@media(max-width: 900px) {
+  html {
+    font-size: 10px !important;
+    width: 80% !important;
+    color: #f6ee31;
+    font-family: "Times New Roman", Times, serif;
+  }
+}
+@media(max-width: 480px) {
+  html {
+    font-size: 10px !important;
+    width: 90% !important;
+    color: #f6ee31;
+    font-family: "Times New Roman", Times, serif;
+  }
+}
+@media(max-width: 320px) {
+  html {
+    font-size: 10px !important;
+    width: 100% !important;
+    color: #f6ee31;
+    font-family: "Times New Roman", Times, serif;
+  }
+}
+.scrollit {
+  overflow:scroll;
+  height:800px;
+}
+img {
+  object-fit: cover;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  padding-bottom: 5%;
+}
+.headerImg {
+  object-fit: cover;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+h1 {
+  font-size: 20px;
+  font-size: 8vw;
+  text-align: center;
+}
+p {
+  font-size: 10px;
+  font-size: 2.5vw;
+  text-align: left;
+}
+a {
+  font-size: 10px;
+  font-size: 4vw;
+  text-align: center;
+}
+video {
+  object-fit: cover;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  padding-bottom: 5%;
+}

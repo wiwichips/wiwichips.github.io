@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Home</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Load jquery, bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <!-- Google Fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Actor' rel='stylesheet'>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <!-- Custom CSS End -->
+</head>
+
+<body>
+
+   <button id="soundbutton" type="button">Click Me!</button> 
+
+  <div>
+    <H1 class="text-responsive"><b>Will Pringle Coop Blog</b></H1>
+    
+  </div>
+
+  <a>Introduction</a>
+  <p>
+  In this blog post I will go over my experience as an co-op at Arctic Wolf!
+  </p>
+
+  <video width="320" height="540" controls>
+    <source src="./AW.mp4" type="video/mp4">
+  </video>
+  <br>
+
+  <a>Information about the Employer</a>
+  <p>
+For my final co-op work term, I joined Arctic Wolf. Arctic Wolf (AW) is a cybersecurity company founded 10 years ago by Brian NeSmith. AW provides security monitoring for on premises infrastructure and concierge security for its customers.
+  </p>
+
+  <br>
+
+  <p>
+  Most of the work I conducted at Arctic Wolf involved a part of the Golang codebase for scanner and scanner infrastructure. Scanners are instances of software that scan for security vulnerabilities. For instance, it could report if there are parts of a customer's system susceptible to Log4J exploits. 
+
+  </p>
+  <img src="./296896362_1012057832920335_36124132357421070_n.jpg"></img>
+ 
+  <br>
+
+  <Goals>
+  <p>
+  1) At Arctic Wolf Networks it will be my mission to make significant contributions to the codebase for the Scanner team and related software when necessary. 2) I will strive to step out of my comfort zone and ask questions whenever I am stuck. 3) I will attend company events and try to come into the office in person on a weekly basis.
+  </p>
+
+  <br>
+
+  <p>
+  For the most part I feel I accomplished these goals. I ended up making a lot of code contributions, I tried to ask questions when I was stuck or confused, and I tried to attend as many company events as I could.
+  </p>
+
+  <br>
+  <img src="./20220708_081023.jpg"></img>
+
+  <a>Job Description</a>
+  <p>
+As mentioned earlier, I worked on software relating to scanner and scanner infrastructure. I worked with the following technologies during my time at Arctic Wolf: Python, Go, Linux, AWS, Docker, Kuberenetes, PostgreSQL, Kafka, RabbitMQ, Prometheus. Before coming to Arctic Wolf, I was only familiar with Python and Linux so I had to learn the rest of the technical skills to use these tools on the job when completing tasks. 
+Most of the work I conducted at Arctic Wolf centred around a project automating the process of deactivating, or in other words churning, scanners. Scanners will need to be churned for a number of reasons; for instance, if a customer stops doing business with Arctic Wolf the scanner(s) associated with the customer should be deleted from the system. Originally, this was a long manual task. This project aimed to automate the process. As part of that project, I added a component to our Kafka messaging service to send churn notifications upon scanner deactivation. Since each scanner was associated with a rabbitmq messaging admin user which also has to be deleted upon a churn. I wrote code that sends a http request to the rabbitmq admin service to delete a user associated with that scanner. Although this project automates the churning of scanners, it can still be useful to manually churn a list of scanners. I wrote a Python script that utilizes the changes in the backend for automatic churning to allow a user to delete a list of specified scanner(s). I demonstrated how to use the churn script to another employee at Arctic Wolf.
+Beyond the scanner churn project I worked on a few other projects as well. In order to help accounting keep track of the number of scanners deployed in certain regions. I developed a script that queries a database for scanners in regions and outputs the total number present in each region. I also developed an API spec for a new change to allow for more fields to be passed along with scanner scan schedules. I added a check using Prometheus to send an alert when a specific service fails.
+On the side, I was also able to participate in a few fun projects, such as helping plan the co-op midterm event and participate in an Arctic Wolf musical hackathon where songs about Arctic Wolf are submitted and compiled into an album.
+  </p>
+ 
+  <br>
+  
+  <img src="./20220721_105926.jpg"></img>
+
+  <a>Conclusions</a>
+  <p>
+Here is a summary of the work I conducted at Arctic Wolf
+---- In order to automate the deactivation of vulnerability scanners, I wrote Go code that appropriately removes data by sending Kafka and RabbitMQ messages.
+---- I wrote a Python script to automate the process of deactivating lists of scanners, speeding up the originally manual process substantially.
+---- I added a check using Prometheus to send an alert when a specific service fails.
+---- I developed an API spec for a new change to allow for more fields to be passed along with scanner scan schedules. 
+---- In order to help accounting keep track of the number of scanners deployed in certain regions, I developed a Python program that queries a database for scanners in regions and outputs the total number present in each region.
+  </p>
+
+  <br>
+
+  <img src="./3dgifmaker05997.gif"></img>
+  <a>Acknowledgments</a>
+  <p>
+It was a pleasure to work with everyone on my team! I'll specifically highlight a few people who I was fortunate to work with a lot during this co-op term.
+---- My fellow co-op Min Park.
+---- Shawana Khokher, an engineer who helped me understand the system I worked on better.
+---- Mae Kennedy, who often reviewed my PRs and provided great feedback and cool tips.
+---- Dhanvanthari Manjunath Ilangovan, my manager who checked up on me and made sure I was enjoying what I was working on.
+  </p>
+ 
+
+
+  <!-- for personal code  -->
+  <script src="./code.js"></script>
+</body>
+
+</html>
