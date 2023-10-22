@@ -1,20 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Will Pringle</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WillPringle.ca</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #title {
+            font-size: 24px;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            const titleElement = document.getElementById("title");
+            const colors = ["#FF5733", "#33FF57", "#5733FF", "#FF33D9", "#D9FF33", "#33D9FF"];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            titleElement.style.color = randomColor;
+        }
+    </script>
 </head>
 <body>
-
-<audio autoplay loop>
-  <!-- aphex twin -->
-  <source src="https://t4.bcbits.com/stream/8cf9402afe26aff9772fa1d1c99b6c18/mp3-128/1900716759?p=0&ts=1633892398&t=f895a8a9407479fcb1dddf1abdb08c496a428db5&token=1633892398_76c8ecbd02e092d9b3e8f59f0c8678d944b7c718" type="audio/ogg">
-  Your browser does not support the audio element.
-</audio> 
-
-<div>
-  <img class="rotate" src="https://avatars.githubusercontent.com/u/18359452?v=4" alt="will">
-</div>
-
+    <img src="https://avatars.githubusercontent.com/u/18359452?v=4" alt="Profile Image">
+    <h1 id="title">WillPringle.ca</h1>
+    <h2>Software Developer</h2>
+    <h3>Links</h3>
+    <ul>
+        <li><a href="https://raw.githubusercontent.com/wiwichips/resume/main/resume.pdf">Resume</a></li>
+        <li><a href="https://github.com/wiwichips">GitHub</a></li>
+        <li><a href="https://medium.com/@willkantorpringle">Medium Articles</a></li>
+        <li><a href="https://www.youtube.com/channel/UC9j1FHLZJFGvKGZwjxtN69A">YouTube Videos</a></li>
+    </ul>
+    <h3>Projects</h3>
+    <ul>
+        <li><a href="https://wiwichips.github.io/imgprobox/">ImgProBox</a> - Image Processing Toolbox in the browser using Rust + WASM + React</li>
+    </ul>
 </body>
-</html> 
+</html>
+
