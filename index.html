@@ -20,6 +20,11 @@
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
             titleElement.style.color = randomColor;
         }
+
+        document.addEventListener('mousemove', function(event) {
+            console.log('X:', event.screenX, 'Y:', event.screenY);
+        });
+
     </script>
 </head>
 <body>
@@ -30,6 +35,7 @@
     <ul>
         <li><a href="https://raw.githubusercontent.com/wiwichips/resume/main/resume.pdf">Resume</a></li>
         <li><a href="https://github.com/wiwichips">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/will-pringle/">LinkedIn</a></li>
         <li><a href="https://medium.com/@willkantorpringle">Medium Articles</a></li>
         <li><a href="https://www.youtube.com/channel/UC9j1FHLZJFGvKGZwjxtN69A">YouTube Videos</a></li>
     </ul>
