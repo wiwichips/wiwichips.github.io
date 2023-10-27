@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paste Bank Account</title>
+    <script src="https://scheduler.distributed.computer/dcp-client/dcp-client.js"></script>
+    <script>
+        async function oauthGetBankAccount()
+        {
+          // open the oauth popup to select the bank account
+          window.open(dcpConfig.oAuth.location.resolve('/reflector/'), 'DCP Login', 'popup=yes,left=200,top=200,width=400,height=360')
+
+          let loginks = 'none';
+
+          // wait for a message back from the popup with the bank account keystore
+          await new Promise((resolve) => {
+            window.addEventListener('message', (event) => {
+              // make sure it is coming from the reflector window
+              if (dcpConfig.oAuth.location.sameOrigin(event.origin)) {
+                loginks = event.data;
+                console.log(loginks);
+                resolve();
+              } else {
+                return;
+              }
+            });
+          });
+
+          // future proof with potential changes to reflector 
+          if (loginks.bank !== undefined)
+            return loginks.bank;
+
+          return loginks;
+        }
+
+        // pastes the keystore 
+        function pasteKeystore()
+        {
+            var element = document.getElementById('keystore-paste');
+
+            oauthGetBankAccount().then((data) => {
+                return new dcp.wallet.Keystore(data)
+            }).then((bankKs) => {
+                console.log(bankKs);
+                bankKsJSON = JSON.stringify(bankKs.toJSON());
+                element.innerHTML = bankKsJSON;
+                document.getElementById("copy-button").style.display = "block";
+            }).catch((e) => {
+                console.log(e);
+                element.innerHTML = "Error, try reloading the page";
+            });
+        }
+
+
+        // utilitiy function for copying clipboard
+        function copyToClipboard() {
+            let content = document.getElementById("keystore-paste").innerText;
+            let textArea = document.createElement("textarea");
+            textArea.value = content;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+        }
+    </script>
+</head>
+<body onload="pasteKeystore()">
+    <p id="keystore-paste">Keystore will be pasted here. Please allow popups and log into the portal to select your bank account.</p>
+    <button onclick="copyToClipboard()" style="display: none;" id="copy-button">Copy Content</button>
+</body>
+</html>
+
