@@ -42,9 +42,18 @@
             oauthGetBankAccount().then((data) => {
                 return new dcp.wallet.Keystore(data)
             }).then((bankKs) => {
-                console.log(bankKs);
-                bankKsJSON = JSON.stringify(bankKs.toJSON());
-                element.innerHTML = bankKsJSON;
+                // filter out non-needed properties of the keystore
+                const bankKsJSON = bankKs.toJSON();
+                const allowedProps = [ 'version', 'address', 'crypto' ];
+                const bankKsLean = {};
+
+                for (const prop of allowedProps)
+                    bankKsLean[prop] = bankKsJSON[prop];
+
+                console.log(bankKsLean);
+
+                // other stuff
+                element.innerHTML = JSON.stringify(bankKsLean);
                 document.getElementById("copy-button").style.display = "block";
             }).catch((e) => {
                 console.log(e);
