@@ -44,11 +44,11 @@
             }).then((bankKs) => {
                 // filter out non-needed properties of the keystore
                 const bankKsJSON = bankKs.toJSON();
-                const allowedProps = [ 'version', 'address', 'crypto' ];
-                const bankKsLean = {};
-
-                for (const prop of allowedProps)
-                    bankKsLean[prop] = bankKsJSON[prop];
+                const bankKsLean = {
+                    address: bankKsJSON.address,
+                    crypto:  bankKsJSON.crypto,
+                    version: bankKsJSON.version,
+                };
 
                 console.log(bankKsLean);
 
