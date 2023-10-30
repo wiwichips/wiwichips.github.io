@@ -38,6 +38,7 @@
         function pasteKeystore()
         {
             var element = document.getElementById('keystore-paste');
+            var preElement = document.getElementById('keystore-output');
 
             oauthGetBankAccount().then((data) => {
                 return new dcp.wallet.Keystore(data)
@@ -53,11 +54,14 @@
                 console.log(bankKsLean);
 
                 // other stuff
+                preElement.innerHTML = JSON.stringify(bankKsLean, undefined, 2);
+                element.style.display = "none";
                 element.innerHTML = JSON.stringify(bankKsLean);
                 document.getElementById("copy-button").style.display = "block";
             }).catch((e) => {
                 console.log(e);
                 element.innerHTML = "Error, try reloading the page";
+                preElement.innerHTML = "Error, try reloading the page";
             });
         }
 
@@ -76,6 +80,7 @@
 </head>
 <body onload="pasteKeystore()">
     <p id="keystore-paste">Keystore will be pasted here. Please allow popups and log into the portal to select your bank account.</p>
+    <pre id="keystore-output"></pre>
     <button onclick="copyToClipboard()" style="display: none;" id="copy-button">Copy Content</button>
 </body>
 </html>
