@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Distributive Blender</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
+  <!--
+  <script src="http://scheduler.bestia.office.distributive.network/dcp-client/dcp-client.js"></script>
+  -->
+  <script src="https://scheduler.distributed.computer/dcp-client/dcp-client.js"></script>
+</head>
+<header >
+<header class="text-dark py-2" style="background: #c7d4ed">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+
+      <div id="header-logo">
+        <!--<img src="./jira-logo-scaled.png" alt="Distributive" class="img-fluid">-->
+        <img src="./jira-logo-scaled.png" alt="Distributive" class="img-fluid">
+      </div>
+
+      <div id="header-tagline" class="text-end">
+        <h3>Easy API. Elegant code. Faster results.</h2>
+        <h4>Distributive computing, made easy.</h3>
+      </div>
+
+    </div>
+  </div>
+</header>
+<body>
+
+<div class="container my-4">
+  <h2>Now rendering your blend file. <b id="blend-filename">(FILENAME HERE)</b></h2>
+  <p class="mb-3">Feel free to close this tab and come back later to download your finished render!.</p>
+  <p class="mb-3">Save the download link for later: <a href="#" id="copyLink" data-text="Copy the download link for later">COPY TO CLIPBOARD</a></p>
+  
+  <!-- Download Button -->
+  <button id="download-btn" type="button" class="btn btn-success btn-lg btn-block" style="display: none" onclick="downloadRender(event)">DOWNLOAD</button>
+</div>
+
+<div class="container my-4" id="progbar-container">
+  <div class="text-center">
+    <h1 id="percent-h1">0%</h1>
+  </div>
+  <div class="progress" style="height: 50px">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" id="progbar" role="progressbar" style="width: 1%" aria-valuemax="100"></div>
+  </div>
+  <p id="howmanyframes">?/? frames have been rendered</p>
+</div>
+
+</body>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+<script src="./job-deploy.js"></script>
+<script>
+
+var renderState = {
+  state: undefined,
+  frames: {
+    total:     undefined,
+    completed: undefined,
+    active:    undefined,
+  },
+};
+
+const helpLine = 'will@distributive.network';
+
+// get the query params
+const urlParams = new URLSearchParams(window.location.search);
+const idKeyEncoded = urlParams.get('identity');
+const jodIdEncoded = urlParams.get('jobid');
+const blendFilname = urlParams.get('blendfile');
+const idKeystoreJSON = decodeURIComponent(idKeyEncoded);
+const jobId          = decodeURIComponent(jodIdEncoded);
+
+// try every 2 sec
+const updatePageInterval = setInterval(updatePage, 2000);
+updatePage();
+
+/**
+ * Gets the current status of the render and displays it to the page.
+ * @param tryLocalStorage {Boolean} If true, gets state from LocalStorage.
+ * @affects modifies `renderState`
+ */
+async function updatePage(tryLocalStorage = false)
+{
+  if (tryLocalStorage)
+  {
+    tempRenderState = await updateRenderState(progressFromLocalStorage);
+    updatePageContent();
+  }
+  tempRenderState = await updateRenderState(progressFromDcp);
+  updatePageContent();
+}
+
+/**
+ * @affects Updates the renderState global variable if getStateFn 
+ * successfully updates the state.
+ */
+async function updateRenderState(getStateFn)
+{
+  var tempRenderState = await getStateFn();
+  if (tempRenderState)
+    renderState = tempRenderState;
+  if (renderState.state === 'finished')
+    clearInterval(updatePageInterval);
+}
+
+/**
+ * Returns the render progress stored on disk.
+ * @return {Object|Boolean} a render progress object or false.
+ */
+function progressFromLocalStorage()
+{
+  var renderProgressState = false;
+  try {
+    renderProgressState = JSON.parse(localStorage.getItem("renderState"));
+  }
+  catch (error) {
+    // swallow errors
+    console.error(error);
+  }
+  if (!renderProgressState)
+  {
+    renderProgressState = false;
+  }
+  return renderProgressState;
+}
+
+/**
+ * Returns the render progress from dcp.
+ * @return {Object|Boolean} a render progress object or false.
+ */
+async function progressFromDcp()
+{
+  var dcpRenderStatus;
+
+  console.log(idKeystoreJSON);
+  console.log(jobId);
+
+  try {
+    dcpRenderStatus = await jobStatus(idKeystoreJSON, jobId);
+  }
+  catch(error) {
+    //console.error(error);
+    return;
+  }
+
+  const progressInfo = {
+    state: dcpRenderStatus.status,
+    frames: {
+      total:     dcpRenderStatus.totalSlices,
+      completed: dcpRenderStatus.completedSlices,
+      active:    dcpRenderStatus.activeSlices,
+    },
+  };
+  updatePageProgress(progressInfo);
+
+  // save progress to localstorage
+  localStorage.setItem('renderState', JSON.stringify(progressInfo));
+
+  console.log(dcpRenderStatus);
+  return progressInfo;
+}
+
+/**
+ * @param <Object { state, frames: { total, completed, active } }> info 
+ */
+function updatePageProgress(info)
+{
+  var progressPercent
+  const percentElm = document.getElementById('percent-h1');
+  const progbarElm = document.getElementById('progbar');
+  const howManyElm = document.getElementById('howmanyframes');
+
+  if (!info)
+    return;
+
+  // deal with finished & error cases first
+  switch (info.state)
+  {
+    case 'estimation':
+    case 'running':
+    case 'finished':
+      break;
+    case 'finished':
+      // hide progressbar, show download button
+      clearInterval(updatePageInterval);
+      setPageRenderDone();
+      return;
+    case undefined:
+      console.error('unable to get render');
+      percentElm.innerHTML   = `⚠️  Error attempting to fetch Render. Contact ${helpLine} for help.`;
+      percentElm.style.color = 'red';
+      return;
+    default:
+      console.error(info.state);
+      percentElm.innerHTML   = `⚠️ Your Render is ${info.state}`;
+      percentElm.style.color = 'red';
+      clearInterval(globalThis.updatePageInterval);
+      return;
+  }
+
+  // calculate the job's progress
+  const { completed, active, total } = info.frames;
+  progressPercent = (completed + active / 2) / total;
+  progressPercent = Math.ceil(progressPercent * 100);
+
+  // update the elements
+  percentElm.innerHTML   = `${progressPercent}%`;
+  progbarElm.style.width = `${progressPercent}%`;
+  howManyElm.innerHTML = `${completed}/${total} frames have been rendered`;
+
+  if (progressPercent === 100)
+    setPageRenderDone();
+
+  function setPageRenderDone()
+  {
+    const downloadElm = document.getElementById('download-btn');
+    const progressElm = document.getElementById('progbar-container');
+
+    progressElm.style.display = 'none';
+    downloadElm.style.display = 'inline';
+  }
+}
+
+function updatePageContent()
+{
+  console.log('page content updated');
+  console.dir(renderState);
+  updatePageProgress(renderState);
+  document.getElementById('blend-filename').innerHTML = `(${blendFilname})`;
+}
+
+async function downloadRender(event)
+{
+  // call the dcp code to download the results & stick them together
+  const dcpResults = await jobResults(idKeystoreJSON, jobId);
+  // stich them together into a blob you can download
+  const simpleResults = [];
+  for (const result of dcpResults)
+    simpleResults.push(result.value);
+  // create a nice base filename with some uniqueness
+  const baseFilename = `render_${jobId.slice(2,8)}`;
+
+  for (let i=0; i < simpleResults.length; i++) {
+    console.log(simpleResults[i].length);
+    downloadImage(simpleResults[i], `${baseFilename}_frame_${i+1}.png`);
+  }
+
+  return simpleResults;
+
+  function downloadImage(arrayBuffer, filename)
+  {
+    const blob = new Blob([arrayBuffer], {type: 'image/png'});
+    const url = URL.createObjectURL(blob);
+
+    // Create an anchor element to trigger the download
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = filename;
+    document.body.appendChild(anchor);
+    anchor.click();
+
+    // cleanup 
+    URL.revokeObjectURL(url);
+    document.body.removeChild(anchor);
+  }
+}
+
+document.getElementById('copyLink').addEventListener('click', function(event) {
+    event.preventDefault();
+    var textToCopy = window.location.href;
+    // Use the Clipboard API to copy the text
+    navigator.clipboard.writeText(textToCopy).then(function() {
+        console.log('Text copied to clipboard');
+    }).catch(function(error) {
+        alert('Error copying text: ', error);
+    });
+});
+
+</script>
+</html> 
+
+
+
+
+
+
+
+
+
+

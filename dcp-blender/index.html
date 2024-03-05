@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Distributive Blender</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
+  <!--
+  <script src="https://scheduler.staging.distributive.network/dcp-client/dcp-client.js"></script>
+  <script src="http://scheduler.bestia.office.distributive.network/dcp-client/dcp-client.js"></script>
+  -->
+  <script src="https://scheduler.distributed.computer/dcp-client/dcp-client.js"></script>
+  <style>
+
+#loading-overlay {
+    position: fixed; /* Cover the entire page */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7); /* Black background with opacity */
+    display: flex;
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    z-index: 1000; /* Ensure it's on top of other content */
+}
+
+#loadingGif {
+    text-align: center;
+}
+
+  </style>
+</head>
+<header >
+<header class="text-dark py-2" style="background: #c7d4ed">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+
+      <div id="header-logo">
+        <img src="./jira-logo-scaled.png" alt="Distributive" class="img-fluid">
+      </div>
+
+      <div id="header-tagline" class="text-end">
+        <h3>Easy API. Elegant code. Faster results.</h2>
+        <h4>Distributive computing, made easy.</h3>
+      </div>
+
+    </div>
+  </div>
+</header>
+<body>
+
+<div class="container my-4">
+  <h2>Upload your .blend file.</h2>
+  <p class="mb-3">Remember to pack all your assets into your blend file.</p>
+  
+  <!-- Upload Card -->
+  <div class="card p-3 mb-4">
+    <div class="card-body">
+      <div id="upload-zone" class="dashed-upload text-center py-5" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+        <i class="bi bi-arrow-up-circle" style="font-size: 2rem;"></i>
+        <p class="text-muted">Drag and drop your file here or click to upload</p>
+
+        <!-- Hidden file input -->
+        <input type="file" id="fileInput" style="display: none;" onchange="fileSelected(event)"/>
+
+        <!-- Custom button to open file browser -->
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+          Upload .blend File
+        </button> 
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Options Section -->
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label for="numberOfFrames" class="form-label">Number of Frames</label>
+      <input type="text" class="form-control" id="numberOfFrames" placeholder="100">
+    </div>
+    <div class="col-md-6 mb-3">
+      <label for="creditsPerFrame" class="form-label">Compute Credits per Frame</label>
+      <input type="text" class="form-control" id="creditsPerFrame" placeholder="DCP market rate">
+    </div>
+  </div>
+  
+  <!-- Toggle Switch -->
+  <div class="mb-3">
+    <p>Render in Global Compute Group</p>
+  </div>
+  <div class="form-check form-switch mb-3">
+    <input class="form-check-input" type="checkbox" id="globalComputeGroup" checked>
+    <label class="form-check-label" id="gloabl-cg-yes-or-no" for="globalComputeGroup">Yes</label>
+  </div>
+  
+  <!-- Private Compute Group Fields -->
+  <div class="mb-3">
+    <p>Render in Private Compute Group(s)</p>
+  </div>
+  <div id="cg-list-div">
+  </div>
+  <div class="text-center">
+    <button type="button" class="btn btn-primary btn-sm bi" onclick="addComputeGroup(event)">+</button>
+    <br>
+    <p></p>
+  </div>
+  
+  <!-- Render Button -->
+  <button type="button" class="btn btn-primary btn-lg btn-block" onclick="prepAndDeploy(event)">RENDER</button>
+  
+  <!-- Footer Text -->
+  <p class="text-center text-muted mt-3">
+    You will be redirected to a page where you can download your rendered files once completed.
+  </p>
+</div>
+
+<!-- Loading -->
+<div id="loading-overlay">
+    <div id="loadingGif">
+        <img src="https://portal.distributed.computer/static/DCP-loading-100-0cc8e9e2.gif" alt="Loading...">
+    </div>
+</div>
+
+</body>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+<script>
+
+document.getElementById('loading-overlay').style.display = 'none';
+
+const helpLine = 'will@distributive.network';
+var numComputeGroupUiElements = 0;
+
+addComputeGroup();
+
+function addComputeGroup()
+{
+  const newCgRow = generateCGRowHTML(numComputeGroupUiElements++);
+  const cgListDiv = document.getElementById('cg-list-div');
+
+  //cgListDiv.innerHTML += newCgRow;
+  cgListDiv.insertAdjacentHTML('beforeend', newCgRow);
+
+  function generateCGRowHTML(num)
+  {
+    return `<div class="row" id="cg-ui-row-div-${num}">
+      <div class="col-md-6 mb-3">
+        <input type="text" class="form-control mb-2" placeholder="join key" id="cg-ui-key-${num}">
+      </div>
+      <div class="col-md-6 mb-3">
+        <input type="text" class="form-control" placeholder="join secret" id="cg-ui-secret-${num}">
+      </div>
+    </div>`;
+  }
+}
+
+function dropHandler(ev)
+{
+  const files = [];
+  console.log("File(s) dropped");
+
+  // Prevent default behavior (Prevent file from being opened)
+  ev.preventDefault();
+
+  if (ev.dataTransfer.items)
+  {
+    // Use DataTransferItemList interface to access the file(s)
+    [...ev.dataTransfer.items].forEach((item, i) => {
+      // If dropped items aren't files, reject them
+      if (item.kind === "file")
+      {
+        const file = item.getAsFile();
+        files.push(file);
+        console.log(`… file[${i}].name = ${file.name}`);
+      }
+    });
+  }
+  else
+  {
+    // Use DataTransfer interface to access the file(s)
+    [...ev.dataTransfer.files].forEach((file, i) => {
+      console.log(`… file[${i}].name = ${file.name}`);
+    });
+  }
+
+  if (files.length > 1)
+    alert('Warning, please only submit one blend file at a time');
+  else if (files.length === 1)
+    processBlendFile(files[0]);
+  else
+    alert('Warning, experienced problem loading file. Try again');
+}
+
+function dragOverHandler(ev)
+{
+  console.log("File(s) in drop zone");
+
+  // Prevent default behavior (Prevent file from being opened)
+  ev.preventDefault();
+}
+
+function fileSelected(event)
+{
+  var file = event.target.files[0]; // Get the selected file
+  
+  // You can now do something with the selected file, for example:
+  console.log('File name:', file.name);
+  console.log('File size:', file.size);
+  console.log('File type:', file.type);
+  
+  // If you want to read the file, you can use FileReader or another method
+  // For example, to read the file as text:
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var contents = e.target.result;
+    console.log('File contents:', contents);
+  };
+  reader.readAsText(file); // Read the file as text
+
+  processBlendFile(file);
+}
+
+function processBlendFile(file)
+{
+  // TODO: check if the blend file is valid...
+
+  // update the view...
+  const uploadDiv = document.getElementById('upload-zone');
+  uploadDiv.innerHTML = `<h2><i>${file.name}</i></h2>`;
+
+  globalThis.currentBlendFile = file;
+}
+
+async function prepAndDeploy(event)
+{
+  const errors = [];
+
+  const numberOfFrames    = document.getElementById('numberOfFrames').value;
+  const creditsPerFrame = document.getElementById('creditsPerFrame').value;
+  const leavePublicGroup  = !document.getElementById('globalComputeGroup').checked;
+  const cgRows = [];
+
+  const oneHundredUsdInDcc = 315397;
+  const minDcc = 0.001;
+
+  for (let i = 0; i < numComputeGroupUiElements; i++)
+  {
+    const cgRowKey = document.getElementById(`cg-ui-key-${i}`).value;
+    const cgRowSec = document.getElementById(`cg-ui-secret-${i}`).value;
+
+    if (cgRowKey.length > 0)
+      cgRows.push({ joinKey: cgRowKey, joinSecret: cgRowSec });
+  }
+
+  // validation for number of frames
+  if (isNaN(numberOfFrames))
+    errors.push(`"${numberOfFrames}" is an invalid number of frames to animate.`);
+  const numSlices = Number(numberOfFrames);
+
+  if (numSlices <= 0)
+    errors.push(`Number of Frames must be at least 1 or higher, not ${numSlices}`);
+
+  // credit validation
+  if (isNaN(creditsPerFrame))
+    errors.push(`"${creditsPerFrame}" is not a valid amount of DCCs.`);
+  const slicePaymentOffer = Number(creditsPerFrame);
+
+  // idk, maybe it was an accident if someone tried to spend $100 USD on it?
+  if (slicePaymentOffer > oneHundredUsdInDcc)
+    errors.push(`${slicePaymentOffer}⊇ is too high, please enter a value less than ${oneHundredUsdInDcc}⊇ or contact ${helpLine} for help.`);
+  else if (slicePaymentOffer < 0.001)
+    errors.push(`${slicePaymentOffer}⊇ is invalid, please set payment to at least ${minDcc}⊇.`);
+
+  if (leavePublicGroup && cgRows.length === 0)
+    errors.push('You must deploy your workload to a compute group or else no computers will be able to render your animation!');
+
+  if (!globalThis.currentBlendFile)
+    errors.push('You must add a .blend file to render');
+
+  // Who doesn't love Alerts!
+  if (errors.length > 0)
+  {
+    alert(errors.join('\n'));
+    return 0;
+  }
+
+  // if we got this far, we're ready to try deploying the job
+  const jobInformation = {
+    file: globalThis.currentBlendFile, // should probably make this an awaitable promise which resolves when content is loaded
+    numSlices,
+    slicePaymentOffer,
+    leavePublicGroup,
+    extraComputeGroups: cgRows,
+    on: {
+      init:  ()      => document.getElementById('loading-overlay').style.display = 'flex',
+      error: (error) => {
+        document.getElementById('loading-overlay').style.display = 'none';
+        alert(error);
+      },
+    },
+  };
+
+  const renderPromise = deployRender(jobInformation);
+  var jobId, idKeystore;
+  var renderDeploySuccess = true;
+  try
+  {
+    const renderInfo = await renderPromise;
+    jobId      = renderInfo.jobId;
+    idKeystore = renderInfo.idKeystore;
+  }
+  catch(error)
+  {
+    alert(error);
+    renderDeploySuccess = false;
+  }
+  finally
+  {
+    document.getElementById('loading-overlay').style.display = 'none'; 
+  }
+
+  const idKeyJSON    = JSON.stringify(idKeystore.toJSON());
+  const idKeyEncoded = encodeURIComponent(idKeyJSON);
+
+  const queryParams=`?jobid=${jobId}&blendfile=${globalThis.currentBlendFile.name.slice(0,50)}&identity=${idKeyEncoded}`;
+  console.log(queryParams);
+  if (renderDeploySuccess)
+    window.location.href = `/download.html${queryParams}`;
+}
+
+</script>
+<script src="./job-deploy.js"></script>
+</html> 
