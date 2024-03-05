@@ -325,7 +325,7 @@ async function prepAndDeploy(event)
   const queryParams=`?jobid=${jobId}&blendfile=${globalThis.currentBlendFile.name.slice(0,50)}&identity=${idKeyEncoded}`;
   console.log(queryParams);
   if (renderDeploySuccess)
-    window.location.href = `/download.html${queryParams}`;
+    window.location.href = `/dcp-blender/download.html${queryParams}`;
 }
 
 </script>
