@@ -12,8 +12,6 @@ async function deployRender(jobOptions)
   const blendFile = await base64File(jobOptions.file);
   const frames = Array.from({length: jobOptions.numSlices}, (_, i) => i + 1);
 
-dcp['dcp-config'].oAuth.walletIntegration = false;
-
   const idKeystore = await new wallet.IdKeystore(null, '');
   wallet.addId(idKeystore);
 
