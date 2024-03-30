@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>DCP S3 Dashboard</title>
+    <meta charset="utf-8">
+    <meta content="ie=edge" http-equiv="x-ua-compatible">
+    <meta name="handheldfriendly" content="true">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <meta name="description" content="Why pay for storage when Distributive will pay for you">
+    <meta property="og:site_name" content="DCP-S3">
+    <meta property="og:title" content="The Free Storage Solution from the makers of DCP">
+    <meta property="og:description" content="Why pay for storage when Distributive will pay for you">
+    <meta property="og:image" content="https://wiwichips.github.io/dcp-s3/splash.png">
+    <meta property="og:url" content="https://wiwichips.github.io/dcp-s3">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://wiwichips.github.io/dcp-s3">
+    <link rel="stylesheet" href="./style.css" type="text/css">
+    <script src="https://scheduler.distributed.computer/dcp-client/dcp-client.js"></script>
+    <script src="./code.js"></script> 
+    <script src="./helper.js"></script> 
+  </head>
+  <body data-controller="engagement tracking">
+<input class="nav-active" id="nav-active" type="checkbox">
+<label class="nav-underlay" for="nav-active"></label>
+<nav class="nav">
+  <div class="nav__container">
+    <div class="nav__content">
+      <div class="nav__logo">
+        <a href="https://distributive.network/" aria-label="Distributive">
+          <img  height="50"  width="10" src="https://avatars.githubusercontent.com/u/68128254?s=200&v=4" style="object-fit: contain; width: auto"></img>
+        </a>
+      </div>
+      <ul class="nav__items">
+        <li><a href="./index.html" aria-label="Home">Home</a></li>
+        <li><a href="http://dcp.dev/" aria-label="Compute">Compute</a></li>
+      </ul>
+      <ul class="nav__buttons">
+      </ul>
+      <div class="nav__toggle">
+        <label for="nav-active">
+          <span>Menu</span>
+        </label>
+      </div>
+    </div>
+    <div class="nav__mobile">
+      <ul>
+        <li><a href="./index.html" aria-label="Home">Home</a></li>
+        <li><a href="http://dcp.dev/" aria-label="Compute">Compute</a></li>
+    </div>
+  </div>
+</nav>
+    <main class="main">
+      <div class="site site--bumper-bottom">
+
+<div class="frame">
+  <div class="frame__card card">
+    <div class="reviews">
+    </div>
+    <div class="intro">
+      <header>
+        <h1>Upload</h1>
+        <h2>Drag and Drop a file here!</h2>
+        <input type="file" id="uploadInput" />
+      </header>
+    </div>
+    <div class="overview space-top--neutral">
+      <div class="overview__card card">
+        <button class="overview__button modal-trigger" aria-label="How does DCP-S3 work?"></button>
+        <figure class="overview__figure">
+          <picture>
+            <img src="./arrow.png" width="820" height="400" alt="">
+          </picture>
+        </figure>
+      </div>
+        <h1><br></h1><br>
+    </div>
+  </div>
+</div>
+<div class="signup" role="region">
+  <div>
+    <a class="button button--glow button--signup" href="./dashboard.html" data-track-signup>
+      <span>Try DCP-S3</span>
+    </a>
+  </div>
+</div>
+
+<div class="frame">
+  <div class="frame__card card">
+    <div class="reviews">
+    </div>
+    <div class="intro">
+      <header>
+        <h1>Browse</h1>
+        <h2>View Files Here (Refresh to see updates)</h2>
+      </header>
+
+ <table id="file-table">
+  <tr>
+    <th>Filename</th>
+    <th>Date</th>
+    <th>Type</th>
+  </tr>
+
+<!--
+  <tr>
+    <td>Alfreds Futterkiste</td>
+    <td>Maria Anders</td>
+    <td>Germany</td>
+    <td>Germany</td>
+  </tr>
+  <tr>
+    <td>Centro comercial Moctezuma</td>
+    <td>Francisco Chang</td>
+    <td>Mexico</td>
+    <td>Germany</td>
+  </tr>
+  <tr>
+    <td>Centro comercial Moctezuma</td>
+    <td>Francisco Chang</td>
+    <td>Mexico</td>
+    <td>Germany</td>
+  </tr>
+-->
+</table> 
+    
+      <br>
+    </div>
+  </div>
+</div>
+<a href="#" id="downloadLink" style="display: none;">Download File</a>
+
+<div class="bumper__container">
+</div>
+
+<!-- Loading -->
+<div id="loading-overlay">
+    <div id="loadingGif">
+        <img src="https://portal.distributed.computer/static/DCP-loading-100-0cc8e9e2.gif" alt="Loading...">
+    </div>
+</div>
+
+
+</body>
+<script>
+
+document.getElementById('loading-overlay').style.display = 'none';
+
+const table = document.getElementById('file-table');
+
+async function main()
+{
+  //await uploadFile(serializeFile({name: 'epic.txt', contents: 'This is an epic\nmulti line file!'}));
+  const jobs = await getJobsDeployed();
+  const jobsResultsPromises = [];
+
+  const dateOptions = {
+    month: 'numeric',
+    day: 'numeric', // 1, 2, 3, etc.
+    hour: '2-digit', // 2-digit hour
+    minute: '2-digit', // 2-digit minute
+  };
+
+  for (const job of jobs)
+  {
+    const res = await getJobResults(job.jobAddress);
+    const val = res[0].value;
+    
+    table.insertAdjacentHTML('beforeend', `<tr id="${job.jobAddress}">
+<td><a id="${job.jobAddress}-get" href="#">${val?.name && makeSmallKeepExt(val?.name)}</a></td>
+<td>${val?.time.toLocaleString('en-US', dateOptions)}</td>
+<td>${val?.mime}</td>
+</tr>`);
+
+//<td><a id="${job.jobAddress}-del" href="#">DEL</a></td>
+    console.log(res);
+  }
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    table.addEventListener('click', aGetDelListener);
+});
+
+async function aGetDelListener(event) {
+  if (event.target.tagName === 'A' && event.target.id[0] === '0') {
+    event.preventDefault();
+
+    console.log('Clicked ID:', event.target.id);
+    const jobId = event.target.id.split('-')[0];
+
+    // Perform actions based on the ID, for example:
+    if (event.target.id.endsWith('-get')) {
+      const res = await getJobResults(jobId);
+      const val = res[1].value;
+      let base64String = val.contents;
+
+      let contentType = base64String.match(/^data:(.+);base64,/)[1]; // Extract MIME type from Base64 string
+      let base64Content = base64String.split(',')[1]; // Actual Base64 content
+      let byteCharacters = atob(base64Content); // Decode Base64 string
+      let byteArrays = [];
+
+      for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+          let slice = byteCharacters.slice(offset, offset + 512);
+          let byteNumbers = new Array(slice.length);
+          for (var i = 0; i < slice.length; i++) {
+              byteNumbers[i] = slice.charCodeAt(i);
+          }
+          let byteArray = new Uint8Array(byteNumbers);
+          byteArrays.push(byteArray);
+      }
+
+      let blob = new Blob(byteArrays, {type: contentType}); // Create a blob from byte arrays
+      let downloadUrl = URL.createObjectURL(blob); // Create an object URL for the blob
+
+      let downloadLink = document.getElementById('downloadLink');
+      //let downloadLink = event.target;
+      downloadLink.href = downloadUrl;
+      downloadLink.download = val.name; // Optionally, suggest a filename (you might want to include a specific extension)
+
+      downloadLink.click();
+
+      // Optional: Revoke the object URL after the link is clicked
+      setTimeout(function() {
+          window.URL.revokeObjectURL(downloadUrl);
+      }, 25 * 1000);
+
+
+
+    } else if (event.target.id.endsWith('-del')) {
+      await cancelJob(jobId);
+      //location.reload();
+    }
+  }
+}
+
+document.getElementById('uploadInput').addEventListener('change', function(event) {
+  var file = event.target.files[0];
+  if (file) {
+    var reader = new FileReader();
+    reader.onload = function(readerEvent) {
+      var content = readerEvent.target.result;
+        // content contains the base64-encoded string
+      console.log(content); // You can save this Base64 string as needed
+
+      // start loading screen
+      document.getElementById('loading-overlay').style.display = 'flex';
+      
+      // dcp
+      uploadFile({
+        name: file.name,
+        contents: content,
+        mime: file.type,
+        size: file.size
+      })
+        .catch((error) => {
+            console.log(error); 
+        })
+        .finally(() => {
+            document.getElementById('loading-overlay').style.display = 'none';
+            location.reload();
+        });
+
+    };
+    reader.readAsDataURL(file);
+
+  }
+});
+
+
+
+main();
+
+</script>
+<style type="text/css">
+th{
+    font-weight: bold;
+}
+tr:nth-child(2n) {
+    background-color: #f9f7f5
+}
+tr{
+    text-align: left;
+}
+
+
+#loading-overlay {
+    position: fixed; /* Cover the entire page */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7); /* Black background with opacity */
+    display: flex;
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    z-index: 1000; /* Ensure it's on top of other content */
+}
+
+#loadingGif {
+    text-align: center;
+}
+
+
+</style>
+</html>
