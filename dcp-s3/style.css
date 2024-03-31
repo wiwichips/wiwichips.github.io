@@ -230,6 +230,29 @@ table {
     --font-size-xxx-large: 260%
   }
 }
+
+@font-face {
+  font-family: 'Really Sans Large';
+  src: url('https://litmus.com/fonts/Emails/proximanova-regular-webfont.eot');
+  src: url('https://litmus.com/fonts/Emails/proximanova-regular-webfont.eot?#iefix') format('embedded-opentype'),
+     url('https://litmus.com/fonts/Emails/proximanova-regular-webfont.woff') format('woff'),
+     url('https://litmus.com/fonts/Emails/proximanova-regular-webfont.ttf') format('truetype'),
+     url('https://litmus.com/fonts/Emails/proximanova-regular-webfont.svg#proxima_nova_rgregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Really Sans Large';
+  src: url('https://litmus.com/fonts/Emails/proximanova-bold-webfont.eot');
+  src: url('https://litmus.com/fonts/Emails/proximanova-bold-webfont.eot?#iefix') format('embedded-opentype'),
+     url('https://litmus.com/fonts/Emails/proximanova-bold-webfont.woff') format('woff'),
+     url('https://litmus.com/fonts/Emails/proximanova-bold-webfont.ttf') format('truetype'),
+     url('https://litmus.com/fonts/Emails/proximanova-bold-webfont.svg#proxima_nova_rgbold') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/*
 @font-face {
   font-family:"Really Sans Large";
   font-style:normal;
@@ -340,6 +363,7 @@ table {
   font-weight:600;
   src:url(/assets/fonts/Shantell_Sans-Normal-SemiBold_Italic.woff2) format("woff2")
 }
+*/
 .space--none {
   margin:0 !important
 }

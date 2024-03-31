@@ -31,6 +31,7 @@ async function uploadFile(file)
     leavePublicGroup: true,
     computeGroups:    [],
     jobAddresses:     [job.id],
+    watchdogInterval: 500, // fast pinging for new work
   };
   const worker = new dcp.worker.Worker(idKs, workerOptions);
   worker.start();
@@ -56,11 +57,17 @@ async function getJobsDeployed()
 }
 
 // get results from a job
-async function getJobResults(jobId)
+async function getJobResults(jobId, sliceNumber)
 {
   const idKs  = await new dcp.wallet.IdKeystore(jsonId, '');
   dcp.wallet.addId(idKs);
-  return dcp.job.fetchResults(jobId);
+
+  const RangeObject = dcp['range-object'].RangeObject;
+
+  if (!sliceNumber)
+    return dcp.job.fetchResults(jobId);
+
+  return dcp.job.fetchResults(jobId, new RangeObject(sliceNumber, sliceNumber));
 }
 
 function serializeFile(file)
