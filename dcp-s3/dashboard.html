@@ -188,6 +188,12 @@ async function main()
     }
     else
     {
+
+
+      let mimeParts = val?.mime?.split('/') || [];
+      if (mimeParts.length > 1)
+        val.mime = mimeParts[1];
+
     table.insertAdjacentHTML('beforeend', `<tr id="${job.jobAddress}">
 <td><a id="${job.jobAddress}-get" href="#">${val?.name && makeSmallKeepExt(val?.name, 34)}</a></td>
 <td>${val?.time.toLocaleString('en-US', dateOptions)}</td>
