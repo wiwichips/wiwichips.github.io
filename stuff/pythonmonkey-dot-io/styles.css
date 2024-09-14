@@ -1,0 +1,172 @@
+body {
+    margin: 0;
+    font-family: monospace;
+    background-color: #000000; /* Retained original dark gray background */
+    color: white;
+    font-size: 18px; /* Increased base font size */
+
+}
+
+body .maincontent {
+    /*background: linear-gradient(to bottom, #424242, #424242, #000000);*/
+    background: linear-gradient(180deg, rgb(25.882% 25.882% 25.882%) 0%, rgb(25.876% 25.876% 25.876%) 6.25%, rgb(25.832% 25.832% 25.832%) 12.5%, rgb(25.712% 25.712% 25.712%) 18.75%, rgb(25.478% 25.478% 25.478%) 25%, rgb(25.092% 25.092% 25.092%) 31.25%, rgb(24.517% 24.517% 24.517%) 37.5%, rgb(23.715% 23.715% 23.715%) 43.75%, rgb(22.647% 22.647% 22.647%) 50%, rgb(21.276% 21.276% 21.276%) 56.25%, rgb(19.563% 19.563% 19.563%) 62.5%, rgb(17.472% 17.472% 17.472%) 68.75%, rgb(14.963% 14.963% 14.963%) 75%, rgb(12% 12% 12%) 81.25%, rgb(8.543% 8.543% 8.543%) 87.5%, rgb(4.556% 4.556% 4.556%) 93.75%, rgb(0% 0% 0%) 100% )
+}
+
+header {
+    /*background-color: #1a1d21;*/
+    background-color: #1a1d21;
+    display: flex;
+    align-items: center;
+    padding: 20px 40px; /* Increased padding */
+}
+
+header .logo img {
+    height: 60px; /* Increased logo height */
+}
+
+nav {
+    margin-left: auto;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+}
+
+nav a {
+    text-decoration: none;
+    color: #00a0db;
+    font-size: 1.2em; /* Increased font size */
+}
+
+main {
+    text-align: center;
+    padding: 80px 20px; /* Increased padding */
+}
+
+.central-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center elements */
+}
+
+.central-logo img {
+    width: 250px; /* Increased logo size */
+}
+
+.central-logo h1 {
+    /*background-color: #424242;*/
+    color: white;
+    display: inline-block;
+    padding: 20px 30px;
+    margin-top: 30px;
+    font-size: 2.5em; /* Increased font size */
+    line-height: 1.2;
+    text-align: center; /* Ensure text is centered */
+}
+
+.cta pre {
+    background-color: #1a1d21;
+    color: #fecd45;
+    display: inline-block;
+    padding: 15px 30px;
+    margin-top: 40px;
+    border-radius: 5px;
+    font-size: 1.5em; /* Increased font size */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.code-snippet {
+    margin-top: 50px;
+    text-align: left;
+    display: inline-block;
+    background-color: #1a1d21;
+    padding: 30px;
+    border-radius: 5px;
+    font-size: 1.2em; /* Increased font size */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.code-snippet pre {
+    margin: 0;
+}
+
+.code-snippet .green {
+    color: #00ff00;
+}
+
+.code-snippet .yellow {
+    color: #fecd45;
+}
+
+.code-snippet .blue {
+    color: #00a0db;
+}
+
+.code-snippet .white {
+    color: white;
+}
+
+footer {
+    height: 8px;
+    /*background: linear-gradient(to bottom, transparent, #000000);
+    /*background: linear-gradient(to bottom, transparent, #424242); */
+}
+
+/* About and Blog Sections */
+section {
+    padding: 60px 20px;
+    text-align: center;
+    color: white;
+}
+
+section h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+section p {
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-size: 1.1em;
+}
+
+#blog ul {
+    list-style: none;
+    padding: 0;
+}
+
+#blog li {
+    margin-bottom: 10px;
+}
+
+#blog a {
+    color: #00a0db;
+    text-decoration: none;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+#about a {
+    color: #00a0db;
+    text-decoration: none;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+#blog a:hover {
+    text-decoration: underline;
+}
+
+#about a:hover {
+    text-decoration: underline;
+}
+
+/* Optional smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+

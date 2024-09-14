@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PythonMonkey</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="maincontent">
+        <header>
+            <div class="logo">
+                <img src="./PythonMonkeyText.png" alt="PythonMonkey Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="https://docs.pythonmonkey.io/">Documentation</a></li>
+                    <li><a href="https://github.com/Distributive-Network/PythonMonkey/">GitHub</a></li>
+                    <li><a href="https://github.com/Distributive-Network/PythonMonkey/issues">Issues</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <div class="central-logo">
+                <img src="./pythonmonkey-icon.png" alt="PythonMonkey Logo">
+                <h1>
+                    Seamless interop between<br>
+                    Python and JavaScript.
+                </h1>
+            </div>
+
+            <div class="cta">
+                <pre>$ pip install pythonmonkey</pre>
+            </div>
+
+            <div class="code-snippet">
+                <pre>
+    <span class="yellow">>>> import pythonmonkey as pm</span>
+    <span class="yellow">>>> hello = pm.eval(" 'Hello World'.toUpperCase(); ")</span>
+    <span class="yellow">>>> print(hello)</span>
+    <span class="yellow">'HELLO WORLD'</span>
+                </pre>
+            </div>
+        </main>
+    </div>
+
+    <!-- About Section -->
+    <section id="about">
+        <h2>About PythonMonkey</h2>
+        <p>
+PythonMonkey is an embedding of <a href="https://spidermonkey.dev/">Mozilla's SpiderMonkey JavaScript/WebAssembly</a> Engine in Python with high level bindings. It enables Python developers to leverage the JavaScript ecosystem through Python with ease and virtually no performance loss.
+        </p>
+        <br>
+        <p>
+Pythonmonkey was built by <a href="https://www.linkedin.com/posts/will-pringle_javascript-python-activity-7176357433257156608-HBBP?utm_source=share&utm_medium=member_desktop">a team</a> at <a href="https://distributive.network/">Distributive</a> in order to port complex JavaScript libraries to Python while only having to maintain one codebase. PythonMonkey powers <a href="https://github.com/Distributive-Network/bifrost2">Distributive's Python SDK for DCP</a>.
+        </p>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog">
+        <h2>Blog</h2>
+        <ul>
+            <li><a href="https://distributive.network/jobs/python-monkey">High-Level SpiderMonkey Bindings to Python with PythonMonkey</a></li>
+            <li><a href="https://thenewstack.io/python-meets-javascript-wasm-with-the-magic-of-pythonmonkey/">Python Meets JavaScript, Wasm With the Magic of PythonMonkey</a></li>
+            <li><a href="https://medium.com/@willkantorpringle/executing-rust-in-python-using-webassembly-d361eb5583da">Executing Rust in Python using PythonMonkey and WebAssembly</a></li>
+            <li><a href="https://medium.com/@willkantorpringle/calling-c-function-from-python-using-webassembly-63a305248951">Executing C in Python using PythonMonkey and WebAssembly</a></li>
+            <br>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/UmlSryXsh30?si=bGj9QgxCOdUolhYl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </ul>
+    </section>
+</body>
+</html>
+
