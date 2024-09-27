@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trippy Tiling Background</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+
+        #backgroundCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 50px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1, p {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="backgroundCanvas"></canvas>
+    <div class="content">
+        <h1>Owain David Richard Hollett</h1>
+        <!--
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        </p>
+        -->
+        <img src="https://media.licdn.com/dms/image/D5603AQFDzDUSVxU10Q/profile-displayphoto-shrink_200_200/0/1693595972181?e=2147483647&v=beta&t=WwcPPHjii5jPx1IWBjGA_7_gGY-Ld_WsPmjr-0x2gTQ"></img>
+        <!-- Add more content as desired -->
+    </div>
+
+    <script>
+        const canvas = document.getElementById('backgroundCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let time = 0;
+
+        // Resize canvas to fill the window
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Create an offscreen canvas for the tile
+        const tileSize = 512;
+        const tileCanvas = document.createElement('canvas');
+        tileCanvas.width = tileSize;
+        tileCanvas.height = tileSize;
+        const tileCtx = tileCanvas.getContext('2d');
+
+        // Generate a tiling trippy pattern
+        function drawTile() {
+            const imageData = tileCtx.createImageData(tileSize, tileSize);
+            const data = imageData.data;
+
+            for (let y = 0; y < tileSize; y++) {
+                for (let x = 0; x < tileSize; x++) {
+                    const index = (x + y * tileSize) * 4;
+
+                    // Reflect x and y about the center to create symmetry
+                    const x1 = Math.abs(x - tileSize / 2);
+                    const y1 = Math.abs(y - tileSize / 2);
+
+                    // Map x1 and y1 to u and v from 0 to π
+                    const u = (x1 / (tileSize / 2)) * Math.PI;
+                    const v = (y1 / (tileSize / 2)) * Math.PI;
+
+                    // Create symmetric, tiling pattern
+                    const r = Math.floor(128 + 127 * Math.sin(5 * (u + v) + time));
+                    const g = Math.floor(128 + 127 * Math.cos(5 * (u - v) + time));
+                    const b = Math.floor(128 + 127 * Math.sin(5 * (u * v) + time));
+
+                    data[index] = r;     // Red
+                    data[index + 1] = g; // Green
+                    data[index + 2] = b; // Blue
+                    data[index + 3] = 255; // Alpha
+                }
+            }
+
+            tileCtx.putImageData(imageData, 0, 0);
+        }
+
+        function draw() {
+            drawTile();
+
+            // Create a pattern from the tile canvas
+            const pattern = ctx.createPattern(tileCanvas, 'repeat');
+
+            // Clear the canvas
+            ctx.clearRect(0, 0, width, height);
+
+            // Fill the canvas with the pattern
+            ctx.fillStyle = pattern;
+            ctx.fillRect(0, 0, width, height);
+
+            time += 0.02;
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    </script>
+</body>
+</html>
+
