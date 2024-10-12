@@ -5,44 +5,149 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WillPringle.ca</title>
     <style>
+        /* Ensure the canvas stays fixed in the background */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+
         body {
             font-family: Arial, sans-serif;
+            position: relative;
+            overflow-y: auto; /* Enable vertical scrolling */
         }
 
-        #title {
-            font-size: 24px;
+        #grainCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Keep canvas in the background */
+            pointer-events: none; /* Make sure canvas doesn't block content */
+        }
+
+        h1, h2, h3, ul {
+            margin-left: 20px;
+        }
+
+        img {
+            display: block;
+            margin: 20px auto;
+            width: 100px;
+            border-radius: 50%;
+        }
+
+        /* Optional: Ensure content takes up vertical space */
+        .content-wrapper {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
         }
     </style>
-    <script>
-        window.onload = function() {
-            const titleElement = document.getElementById("title");
-            const colors = ["#FF5733", "#33FF57", "#5733FF", "#FF33D9", "#D9FF33", "#33D9FF"];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            titleElement.style.color = randomColor;
-        }
-
-        document.addEventListener('mousemove', function(event) {
-            console.log('X:', event.screenX, 'Y:', event.screenY);
-        });
-
-    </script>
 </head>
 <body>
-    <img src="https://avatars.githubusercontent.com/u/18359452?v=4" alt="Profile Image">
-    <h1 id="title">WillPringle.ca</h1>
-    <h2>Software Developer</h2>
-    <h3>Links</h3>
-    <ul>
-        <li><a href="https://raw.githubusercontent.com/wiwichips/resume/main/resume.pdf">Resume</a></li>
-        <li><a href="https://github.com/wiwichips">GitHub</a></li>
-        <li><a href="https://www.linkedin.com/in/will-pringle/">LinkedIn</a></li>
-        <li><a href="https://medium.com/@willkantorpringle">Medium Articles</a></li>
-        <li><a href="https://www.youtube.com/channel/UC9j1FHLZJFGvKGZwjxtN69A">YouTube Videos</a></li>
-    </ul>
-    <h3>Projects</h3>
-    <ul>
-        <li><a href="https://wiwichips.github.io/imgprobox/">ImgProBox</a> - Image Processing Toolbox in the browser using Rust + WASM + React</li>
-    </ul>
+
+    <canvas id="grainCanvas"></canvas>
+
+    <div class="content-wrapper">
+        <img src="https://avatars.githubusercontent.com/u/18359452?v=4" alt="Profile Image">
+        <h1 id="title">WillPringle.ca</h1>
+        <h2>Software Developer</h2>
+        <h3>Links</h3>
+        <ul>
+            <li><a href="https://raw.githubusercontent.com/wiwichips/resume/main/resume.pdf">Resume</a></li>
+            <li><a href="https://github.com/wiwichips">GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/will-pringle/">LinkedIn</a></li>
+            <li><a href="https://medium.com/@willkantorpringle">Medium Articles</a></li>
+            <li><a href="https://www.youtube.com/channel/UC9j1FHLZJFGvKGZwjxtN69A">YouTube Videos</a></li>
+        </ul>
+        <h3>Projects</h3>
+        <ul>
+            <li><a href="https://wiwichips.github.io/imgprobox/">ImgProBox</a> - Image Processing Toolbox in the browser using Rust + WASM + React</li>
+        </ul>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('grainCanvas');
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        let mouseX = 0, mouseY = 0;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth * dpr;
+            canvas.height = window.innerHeight * dpr;
+            ctx.scale(dpr, dpr);
+            drawBackground();
+        }
+
+        function drawBlobs() {
+            const colors = ['#ff7e5f', '#feb47b', '#6a82fb', '#a1c4fd', '#c2e9fb', 
+                            '#FF5733', '#33FF57', '#5733FF', '#FF33D9', '#D9FF33', '#33D9FF'];
+
+            for (let i = 0; i < 8; i++) {
+                const offsetX = Math.sin((mouseX / window.innerWidth) * Math.PI * 2 + i) * 200;
+                const offsetY = Math.cos((mouseY / window.innerHeight) * Math.PI * 2 + i) * 200;
+
+                const x = mouseX + offsetX;
+                const y = mouseY + offsetY;
+                const radius = Math.random() * 400 + 100;
+
+                const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+                const color1 = colors[(i + Math.floor(mouseX / 100)) % colors.length];
+                const color2 = colors[(i + Math.floor(mouseY / 100) + 1) % colors.length];
+
+                gradient.addColorStop(0, color1);
+                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+                ctx.globalAlpha = 0.6;
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function generateGrain() {
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const pixels = imageData.data;
+
+            for (let i = 0; i < pixels.length; i += 4) {
+                const grain = Math.random() * 10 - 5;
+                pixels[i] += grain;
+                pixels[i + 1] += grain;
+                pixels[i + 2] += grain;
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        function drawBackground() {
+            drawBlobs();
+            generateGrain();
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            drawBackground();
+            colourMyName();
+        });
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function colourMyName() {
+            const titleElement = document.getElementById('title');
+            const colors = ['#FF5733', '#33FF57', '#5733FF', '#FF33D9', '#D9FF33', '#33D9FF'];
+            const colourToUse = colors[Math.floor((mouseX + mouseY) / 333) % colors.length];
+            titleElement.style.color = colourToUse;
+        }
+
+        window.onload = colourMyName;
+    </script>
 </body>
 </html>
 
