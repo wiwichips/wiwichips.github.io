@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DCP Worktimes</title>
+        <style>
+        html,body {
+            height: 100%;
+        }
+        body {
+            background-color: #fff7fc;
+            color: #000;
+            padding: 25px 50px 75px 100px;
+        }
+        h1 {
+            color: #ff0fa7;
+            font-weight: bold;
+            font-size: 400%;
+        }
+        h2 {
+            color: #000;
+        }
+        h1, h3 {
+            text-align: center;
+        }
+        a {
+            color: #0800ff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        pre {
+            background: #fffeed;
+            border-left: 10px solid #ff0fa7;
+            padding: 10px;
+            font-size: 10pt;
+            color: #000;
+        }
+
+        footer {
+            color: #ff0fa7;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Python Execution in DCP</h1>
+
+    <h3>Introducing the Pyodide Worktime: a Python execution runtime environment for DCP</h3>
+
+    <h2>Introduction</h2>
+    <p>
+        <a href="https://distributive.network/platform">DCP</a> (Distributive Compute Protocol) is a market-based compute orchestration platform where users can contribute or utilize existing infrastructure to execute compute-heavy workloads, earning cash or optimizing resource usage. Previously, DCP only supported JavaScript and WebAssembly since workers are based on JavaScript engines, making it challenging for users of other languages to run workloads without complex WebAssembly toolchains or big JavaScript re-writes.
+    </p>
+    <p>
+        A lack of support for native Python workloads in DCP has been a major missing component. Data Scientists and Researchers love Python due its rich ecosystem for scientific compute. Porting or re-writing python projects to WebAssembly and JavaScript is a non-starter for users who depend on this ecosystem and need a simple solution. Researchers can't afford to spend time compiling a Python interpreter to WebAssembly, interfacing with it through JavaScript, and managing Python dependencies themselves.
+    </p>
+
+    <h2>The Pyodide Worktime</h2>
+    <p>
+        We're excited to announce the launch of the Pyodide Worktime, a new <a href="../worktimes">DCP Worktime</a> which adds first-class support for Python execution on DCP.
+    </p>
+    <p>
+        With the Pyodide Worktime, Job Deployers can write their compute workloads in Python and leverage a long list of popular Python packages supported by Pyodide like Numpy, SciPy, Pandas, PIL, OpenCV, and more. The Pyodide Worktime also supports an in-memory filesystem enabling project source code and resources to be uploaded via Tarballs and modified during execution of Job's slice.
+    </p>
+    <p>
+        The Pyodide Worktime is proud to be based on the incredible <a href="https://github.com/pyodide/pyodide">Pyodide project</a>. Pyodide is a Python interpreter based on CPython compiled to WebAssembly. It's embeddable in JavaScript runtimes and browsers and provides high-level interoperation between JavaScript and Python types. Being based on Pyodide means we get support for an ever-growing list of Python packages which have been ported to WebAssembly.
+    </p>
+
+    <h2>Using the Pyodide Worktime from the Python SDK</h2>
+    <pre>
+        <code class="python">
+import dcp
+dcp.init()
+
+from dcp import compute_for
+
+def workfn(datum):
+    import dcp
+    dcp.progress()
+    return datum * datum
+
+my_j = compute_for([1, 2, 3, 4, 5], workfn)
+
+my_j.exec()
+res = my_j.wait()
+
+print(res) # 1 4 9 16 25
+        </code>
+    </pre>
+
+    <h2>Using the Pyodide Worktime from the JavaScript SDK</h2>
+    <pre>
+        <code class="javascript">
+const dcp = require('dcp-client').initSync();
+const { compute } = dcp;
+
+const workfn = `
+def workfn(datum):
+    import dcp
+    dcp.progress()
+    return datum * datum
+`;
+
+const myJob = compute.for([1, 2, 3, 4, 5], workfn)
+
+// specify the worktime here, by default, the JS SDK uses Map Basic
+myJob.worktime = 'pyodide';
+
+myJob.exec().then(console.log); // 1 4 9 16 25
+        </code>
+    </pre>
+
+    <h2>How the Pyodide Worktime Works</h2>
+    <p>
+        The Pyodide Worktime is embedded and shipped with every DCP Worker. If you start a new browser-based worker instance on <a href="https://dcp.work">https://dcp.work</a>, Pyodide will load and the worker will be able to execute either Map Basic and Pyodide workloads (along with additional future Worktimes yet to be released).
+    </p>
+    <p>
+        Despite now being embedded in every DCP Worker, the Pyodide Worktime began life as a really big JavaScript Work Function. This made prototyping simple during development of the worktime and is how we intend future DCP Worktimes to be developed.
+    </p>
+
+    <h2>Try the Pyodide Worktime Today</h2>
+    <p>
+        The easiest way to try is through Distributive's Python SDK. Install it with <code>pip3 install dcp</code>
+    </p>
+</body>
+
+<footer>
+    <br>
+    <br>
+    <br>
+    <p>
+        <a href="/">Home</a> | Related Articles: (<a href="../worktimes">Worktimes</a>) (<a href="../bifrost2">Python SDK for DCP</a>)
+    </p>
+</footer>
+</html>
+
