@@ -13,16 +13,6 @@ jobs:
     # uses GitHub's checkout action to checkout code form the main branch
     - uses: actions/checkout@v2
     
-    # sets up .NET Core SDK 3.1
-    - name: Setup .NET Core SDK
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1
-
-    # publishes Blazor project to the release-folder
-    - name: Publish .NET Core Project
-      run: dotnet publish wiwichips.github.io.csproj -c Release -o release --nologo
-    
     # changes the base-tag in index.html from '/' to 'wiwichips.github.io' to match GitHub Pages repository subdirectory
     - name: Change base-tag in index.html from / to wiwichips.github.io
       run: sed -i 's/<base href="\/" \/>/<base href="\wwwroot//" \/>/g' release/wwwroot/index.html
@@ -41,3 +31,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: main
         FOLDER: release/wwwroot
+
