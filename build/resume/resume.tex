@@ -1,0 +1,226 @@
+%-------------------------
+% Resume in Latex
+% Author : Will Pringle
+% Based off of: https://github.com/sb2nov/resume
+% License : MIT
+%------------------------
+
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+
+\definecolor{mypink2}{RGB}{10, 173, 10}
+
+\titleformat{\section}{
+  \vspace{-10pt}\scshape\raggedright\large
+}{}{0em}{}[\color{mypink2}\titlerule \vspace{-5pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+% note that the vspace 1pt was -2pt before, this controls space between things
+\newcommand{\resumeSubheading}[4]{
+  \vspace{1pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+\hypersetup{
+  colorlinks=true,
+  urlcolor=Darkmypink2,
+  linkcolor=Darkmypink2
+}
+
+\definecolor{Darkmypink2}{RGB}{0, 0, 139}
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    \textbf{\color{mypink2} \Huge \scshape Will Pringle} \\ \vspace{1pt}
+    \small \href{mailto:willkantorpringle@gmail.com}{\underline{willkantorpringle@gmail.com}} $|$ 
+    \href{https://www.linkedin.com/in/will-pringle/}{\underline{linkedin.com/in/will-pringle}} $|$
+    \href{https://github.com/wiwichips}{\underline{https://github.com/wiwichips}} $|$
+    \href{tel:+15199940408}{\underline{+1(519)994-0408}}
+\end{center}
+
+
+
+%-----------PROGRAMMING SKILLS-----------
+\section{Technical Skills}
+  \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+      \textbf{Languages}{: JavaScript, Python, Rust, C, Go / Golang, Bash, Java, SQL, GraphQL} \\
+      \textbf{Frameworks and Libraries}{: Node.js, Express.js, React, Apollo, Django, Tensorflow, Pandas, NumPy} \\
+      \textbf{Developer Tools}{: Git, GitHub Actions, Docker, AWS, Datadog, Kubernetes, MySQL, OpenAPI} \\
+    }}
+  \end{itemize}
+
+
+%-----------WORK EXPERIENCE-----------
+\section{Work Experience}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {Software Engineer}{January 2024 -- Present}
+      {Amazon Web Services}{Toronto, ON}
+      \resumeItemListStart 
+        \resumeItem{\href{https://aws.amazon.com/rds/aurora/}{\underline{Aurora}} Engine Team}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Lead API \& Toolchains Developer}{June 2024 -- November 2024}
+      {\href{https://distributive.network/}{\underline{Distributive}}}{Kingston, ON}
+      \resumeItemListStart 
+        \resumeItem{Designed and built a Webhook server in \textbf{Go} for accessing \textbf{AI model inferences} deployed to \href{https://distributive.network/diana}{\underline{DIANA}}}
+        %%\resumeItem{Developed \href{https://distributive.network/platform}{\underline{DCP}} Worktimes enabling distributed workloads to execute in a variety of runtime environments}
+        \resumeItem{Created a runtime for distributed \textbf{Python} execution on \href{https://distributive.network/platform}{\underline{DCP}} built on \textbf{WebAssembly} and \textbf{Pyodide}}
+        \resumeItem{Designed and implemented a \textbf{Python} SDK for distributed computing via DCP (\href{https://github.com/Distributive-Network/bifrost2}{\underline{Source code on GitHub}})}
+        %\resumeItem{Created \href{https://youtu.be/UmlSryXsh30}{\underline{videos}}, \href{https://distributive.network/jobs/python-monkey}{\underline{articles}}, and met with journalists (Featured in \href{https://thenewstack.io/python-meets-javascript-wasm-with-the-magic-of-pythonmonkey/}{\underline{The New Stack}}, Node Weekly, JS Weekly)
+        \resumeItem{Planned Quarterly OKRs, mentored developers, and scoped MVPs for API and Toolchain products for DCP}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Software Developer}{May 2023 -- June 2024}
+      {\href{https://distributive.network/}{\underline{Distributive}}}{Kingston, ON}
+      \resumeItemListStart 
+        \resumeItem{Developed a \textbf{REST API} for distributed computing integrated with \textbf{OAuth2.0} using \textbf{NodeJS} and \textbf{Express}}
+        \resumeItem{Implemented OAuth2.0-based SDK authorization for enhanced security and convenience for SDK users}
+        \resumeItem{Created a Kubernetes \texttt{manifest.yaml} generator to configure and deploy DCP compute clusters efficiently}
+        \resumeItem{Drove the success of \href{https://github.com/Distributive-Network/PythonMonkey}{\underline{PythonMonkey}}’s launch, earning 300+ GitHub stars in the first month and 800+ stars to date}
+        \resumeItem{Designed in \textbf{Figma} and implemented the \href{https://pythonmonkey.io/}{\underline{pythonmonkey.io}} landing page using \textbf{HTML}, \textbf{JS} and \textbf{CSS}}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Software Engineer Intern (Backend)}{May 2022 -- August 2022}
+      {\href{https://arcticwolf.com/}{\underline{Arctic Wolf}}}{Waterloo, ON}
+      \resumeItemListStart 
+        \resumeItem{Implemented a feature in \textbf{Go} that removes data across a distributed system by sending \textbf{Kafka} and \textbf{RabbitMQ} messages in order to automate the deactivation of security vulnerability scanners}
+        \resumeItem{Wrote a \textbf{Python} script to automate deactivating scanners, speeding up the originally manual process substantially}
+      \resumeItemListEnd
+
+
+    \resumeSubheading
+      {Software Engineer Intern (API)}{September 2021 -- December 2021}
+      {\href{https://www.waveapps.com/}{\underline{Wave Financial Inc.}}}{Toronto, ON}
+      \resumeItemListStart 
+        \resumeItem{Implemented API request caching using \href{https://www.apollographql.com/docs/apollo-server/performance/apq/}{\underline{Automatic Persisted Queries}} for over 140 \textbf{GraphQL} query \textbf{HTTP} requests reducing inbound network traffic by up to 93\% for queries requested millions of times a month}
+        \resumeItem{Helped increase \textbf{GraphQL} literacy by contributing to an internal training project and presenting at demos}
+      \resumeItemListEnd
+    
+    \resumeSubheading
+      {Software Developer Intern (Fullstack)}{January 2021 -- August 2021}
+      {\href{https://distributive.network/}{\underline{Distributive}}}{Kingston, ON}
+      \resumeItemListStart
+        \resumeItem{Implemented a scraping feature for payments, enabling a third party to earn commissions on paid compute}
+%%        \resumeItem{Fixed race condition bugs in an in-house network protocol affecting session ID generation improving security}
+%%        \resumeItem{Re-branded a frontend dashboard used for a research study with 1000+ participants using \textbf{CSS}}
+    %%  \resumeItem{Contributed to the DCP Node.js microservices used for scheduling, tracking, and executing the distributed code, as well as the MySQL database used to manage accounts and transactions}
+    %%  \resumeItem{Fixing bugs and removing memory leaks from the in-house testing framework}
+    %%  \resumeItem{Onboarded 10 new developers to the team; introducing them to the codebase and assisting with setting up development environments}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Research Analyst Intern}{June 2020 -- December 2020}
+      {Ontario Ministry of Finance}{Toronto, ON}
+      \resumeItemListStart
+        \resumeItem{Automated data entry and modelling using \textbf{Python}, reducing time for a critical monthly task by 99\%}
+        \resumeItem{Wrote a package in \textbf{Python} and \textbf{R} that helps economists analyze data that is used to write Ontario's tax policies}
+      \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {University of Guelph}{September 2018 -- May 2023}
+      {Bachelor of Computing, Computer Science, Area of Application in Business Economics}{Guelph, ON}
+      \resumeItemListStart
+%%        \resumeItem{3.7/4.0 GPA (86\% cumulative average) - Graduated with Honours}
+        \resumeItem{Founder and leader of the Guelph B.COMP Discord server, growing active membership from 0 to 2200+}
+        \resumeItem{VP Event Planner for the Society of Computing and Information Science}
+        \resumeItem{Ran and organized multiple Guelph Programming Competitions and a hackathon with over 200 participants}
+      \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+
+%-----------PROJECTS-----------
+\section{Projects}
+  \resumeSubHeadingListStart
+    \resumeProjectHeading
+      {\textbf{ImgProBox}(\href{https://wiwichips.github.io/imgprobox/}{\underline{Try it out}})}{\href{https://github.com/wiwichips/imgprobox}{\underline{github.com/wiwichips/imgprobox}}}
+      \resumeItemListStart
+        \resumeItem{Image processing toolbox in the browser using \textbf{Rust} compiled to \textbf{WebAssembly} for the core logic and \textbf{React}} 
+        \resumeItem{Able to efficiently processes a live webcam feed or allow for images to be uploaded}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+
+
+
+
+%-------------------------------------------
+\end{document}

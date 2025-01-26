@@ -81,7 +81,31 @@
             height: 100vh;
             z-index: -1;
             pointer-events: none;
+            opacity: 1;
         }
+
+.pdf-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%; /* Adjust the width as needed */
+    height: 100%;
+    max-width: 1000px; /* Limit maximum width for larger screens */
+    perspective: 1000px; /* Enables 3D perspective */
+}
+
+.pdf-frame {
+    border: none; /* Remove border */
+    width: 100%;
+    height: 950px; /* Adjust height as needed */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Shadow around the document */
+    transition: transform 0.6s ease, box-shadow 0.6s ease;
+}
+
+.pdf-wrapper:hover .pdf-frame {
+    box-shadow: 0 0px 40px rgba(10, 173, 10, 1); /* Enhanced shadow on hover */
+}
+
 
     </style>
 </head>
@@ -91,8 +115,7 @@
 
     <div class="content-wrapper">
         <img src="https://avatars.githubusercontent.com/u/18359452?v=4" alt="Profile Image">
-        <h1 id="title" style="color: red;">WillPringle.ca</h1>
-        <h2>Software Developer</h2>
+        <h1 id="title" style="color: #0aad0a;">WillPringle.ca</h1>
         <h3>Links</h3>
         <ul>
             <li><a href="https://raw.githubusercontent.com/wiwichips/resume/main/resume.pdf">Resume</a></li>
@@ -114,6 +137,16 @@
         <ul>
             <li><a href="https://wiwichips.github.io/imgprobox/">ImgProBox</a> - Image Processing Toolbox in the browser using Rust + WASM + React</li>
         </ul>
+        <h3>Resume</h3>
+        <ul>
+            <!--<li>Mouse over it for a fun effect</li>-->
+        </ul>
+
+        <!--<embed src="../resume/resume.pdf" type="application/pdf">-->
+        <div class="pdf-wrapper">
+            <iframe src="./build/resume/resume.pdf#toolbar=0&navpanes=0&scrollbar=0" class="pdf-frame"></iframe>
+        </div>
+
     </div>
 
     <script>
@@ -192,6 +225,11 @@
         resizeCanvas();
 
         const colors = ['#FF5733', '#33FF57', '#5733FF', '#FF33D9', '#D9FF33', '#33D9FF'];
+
+        // change color of text depending on time
+        const u_time = Date.now();
+        const title_ele = document.getElementById('title');
+        title_ele.style.color = '#' + u_time.toString(16).slice(-3);
 
     </script>
 </body>
