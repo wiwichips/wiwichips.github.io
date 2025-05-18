@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bifrost 2</title>
-        <style>
-        html,body {
+    <style>
+        html, body {
             height: 100%;
         }
         body {
             background-color: #fff7fc;
             color: #000;
             padding: 25px 50px 75px 100px;
+            max-width: 1000px;
+            margin: 0 auto;
         }
         h1 {
             color: #ff0fa7;
@@ -21,7 +23,7 @@
         h2 {
             color: #000;
         }
-        h1, h3 {
+        h1, h4 {
             text-align: center;
         }
         a {
@@ -38,8 +40,8 @@
             padding: 10px;
             font-size: 10pt;
             color: #000;
+            overflow-x: auto;
         }
-
         footer {
             color: #ff0fa7;
         }
@@ -47,29 +49,138 @@
 </head>
 
 <body>
-    <h1>Under Construction</h1>
+    <h1>Porting a JavaScript SDK to Python <em>(Without a Re-Write)</em></h1>
+    <h4>Introducing the Python SDK for DCP: <a href="https://github.com/Distributive-Network/bifrost2"> Bifrost2</a></h4>
 
-    <h3>Come back here later when I've finished the article...</h2>
-
-    <h2>Article Heading</h1>
     <p>
-        Paragraph content...
-        <a href="url">link</a> more pargraph content...
+        At <a href="https://distributive.network/">Distributive</a>, we had a challenge: our platform, <a href="https://distributive.network/platform">the Distributive Compute Protocol (DCP)</a>, was built around a powerful <a href="https://www.npmjs.com/package/dcp-client">JavaScript SDK</a> used to manage and deploy distributed compute workload.
+        But Python is the language of choice for many scientists, researchers, and developers in our community. They needed a Python SDK in order to use our platform so we had to build one.
     </p>
-    <pre>
-        <code class="javascript">
-            example code here...
-        </code>
-    </pre>
+
+    <p>
+        The common solution would be to rewrite the SDK in Python. But that would double our maintenance burden and introduce all the usual headaches of 
+        parallel development such as version drift, duplicated bug fixes, missing features and more... So we did something very different... <strong><a href="https://medium.com/@willkantorpringle/4a8efce2e598">We embedded JavaScript in Python.</a></strong></p>
+
+    <p>
+        We created a dynamic, cross-language runtime that exposes the entire JavaScript SDK inside Python, <em>automatically</em>.
+        The result is called <strong>Bifrost2</strong>, powered by our in-house library <a href="https://pythonmonkey.io/">PythonMonkey</a>.
+    </p>
+    <p><em>We also developed the <a href="../pyodide-worktime">Pyodide Worktime</a> to execute Python workloads in the browser-based compute environment. This article focuses on Bifrost2</em>.
+    </p>
+
+    <h2>A Python SDK (That's Secretly JavaScript)</h2>
+    <p>The core idea behind Bifrost2 is that we didn’t rewrite the DCP SDK in Python. <em>We dynamically wrapped it</em>.</p>
+    <p>
+        Our JavaScript SDK, <a href="https://www.npmjs.com/package/dcp-client"><code>dcp-client</code></a>, contains all the logic for submitting jobs, serializing workloads, and managing worker nodes.
+        Rather than rewrite that logic, we load the entire CommonJS module system into Python using PythonMonkey.
+        Then we traverse the JS module graph, convert each into a Python module, and dynamically generate classes and functions that proxy into the JavaScript world.
+    </p>
+    <p>
+        It looks and feels like Python. But under the hood, it’s still executing JavaScript.
+    </p>
+
+    <h2>Dynamic Class Wrapping</h2>
+    <h3>1. Dynamic Module Graph Traversal</h3>
+    <p>
+        We recursively walk the dcp-client's modules in JS, and dynamically initialize matching Python modules. We even convert names like dcp-client/compute into Python's dcp.compute, creating real submodules and populating them with functions and classes.
+    </p>
+
+    <h3>2. Auto-Generating Python Classes</h3>
+    <p>
+        Using dynamic class factories, we generate Python classes that proxy JavaScript classes, wrapping their constructors and methods to provide a natural Python interface. These wrappers proxy all method calls to the underlying JS objects, translate return values back into Python, and expose async methods through a .aio namespace for Python async/await compatibility.
+    </p>
+    <p>
+      This is all dynamic. I didn’t write the wrappers manually — they are generated at runtime by inspecting the JavaScript objects via SpiderMonkey.
+    </p>
+
+    <h3>3. Reserved Keyword Hell</h3>
+    <p>
+      The JS SDK uses a method called compute.for. That works great in JS.
+    </p>
+    <pre><code class="python">
+from dcp import compute
+compute.for(...)  # SyntaxError
+    </code></pre>
+    <p>Oops...</p>
+    <p>As <code>for</code> is a reserved keyword, we had to introduce alternative accessors (like <code>compute_for</code>) to avoid syntax collisions with Python keywords.</p>
+
+    <h3>4. No <code>new</code> in Python</h3>
+    <p>
+        JavaScript classes must be instantiated with new, or this will be incorrectly bound. But Python has no new keyword, and worse, you can’t even tell in JS whether a function is a constructor or not.
+
+Our solution? We duck-type the function prototype and use new if it smells like a class. If we guess wrong, we fail fast and wrap it better next time. It’s not elegant, but it works. Mostly.
+    </p>
+
+    <h2>Beautiful Interop</h2>
+    <p>At the end we're left with a very usable Pythonic API:</p>
+    <p>Here's an example of deploying a squaring function across the dcp network...</p>
+    <pre><code class="python">
+import dcp
+
+dcp.init()
+
+def workfn(x):
+    dcp.progress()
+    return x * x
+
+# distributed number squaring!
+# not the most efficient use of parallelism over network per se... (-:
+job = dcp.compute_for([1, 2, 3], workfn)
+job.exec()
+
+# results: [1, 4, 9]
+print(job.wait())
+    </code></pre>
+
+
+    <p>This is a Pythonic API, but every bit of it — from <code>compute_for</code> to <code>job.exec()</code> — is actually running logic from the JavaScript dcp-client. The job serialization, networking, result handling, and even error propagation all pass through SpiderMonkey.</p>
+
+    <p>Behind the scenes, <code>compute_for</code> is dynamically generated. It pulls in the JS Job class, wraps it with Python class factories, and exposes it like any other Python object.</p>
+    <p>And if you want to use <code>await</code> instead of blocking calls? Just use <code>.aio</code>:</p>
+
+    <pre><code class="python">
+await job.aio.exec()
+    </code></pre>
+
+    <h2>Why We Did It</h2>
+    <p>
+        We built Bifrost2 because we didn’t want to maintain two SDKs. But we also wanted to enable Python developers to access DCP with no compromises.
+    </p>
+    <p>And now, with Bifrost2, Python devs get:</p>
+    <ul>
+        <li>Access to DCP without using JavaScript</li>
+        <li>Full Pythonic APIs, including decorators, classes, and docs</li>
+        <li>Async/await support</li>
+    </ul>
+    <p>And we get:</p>
+    <ul>
+        <li>A single codebase to maintain</li>
+        <li>The ability to update both SDKs at once (forwards compatibility as it's all dynamic)</li>
+        <li>A powerful, dynamic interop layer we can extend further</li>
+    </ul>
+
+
+    <h2>Final Thoughts</h2>
+    <p>
+      Bifrost2 is one of the most cursed and magical projects I’ve worked on. It stretches what Python can do and what JavaScript runtimes are capable of. It lets us keep one codebase, support two ecosystems, and build wild things.
+    </p>
+    <p>
+      At the heart of it all is <a href="https://pythonmonkey.io/">PythonMonkey</a>, our embedded JavaScript runtime for Python. It’s what makes this entire architecture possible — bridging two languages with fundamentally different runtimes and expectations, and doing so with speed and flexibility. If you're interested in using NPM packages from Python or exposing Python APIs to JavaScript, PythonMonkey opens a lot of doors.
+    </p>
+    <p>
+      Of course, managing Python-JS interop also meant we needed to run Python code on the web-browser based DCP compute infrastructure too — for that, we created the <a href="/blog/dcp/pyodide-worktime/">Pyodide Worktime</a>, a different but equally epic solution which allows native Python code to be distributed and executed in the browser.
+    </p>
+
 </body>
 
 <footer>
-    <br>
-    <br>
-    <br>
+    <br><br><br>
     <p>
-        <a href="/">Home</a> | Related Articles: (<a href="../pyodide-worktime">Python Execution on DCP</a>) (<a href="../worktimes">Worktimes</a>) 
+        <a href="/">Home</a> | Related Articles:
+        (<a href="/blog/dcp/pyodide-worktime/">Python Execution on DCP</a>) 
+        (<a href="/blog/dcp/worktimes">Worktimes</a>) 
     </p>
 </footer>
+
 </html>
 
