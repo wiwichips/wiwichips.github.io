@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DCP Worktimes</title>
-        <style>
-        html,body {
+    <style>
+        html, body {
             height: 100%;
         }
         body {
             background-color: #fff7fc;
             color: #000;
-            padding: 25px 50px 75px 100px;
+            padding: 1rem 1rem 1rem 1rem;
             max-width: 1000px;
             margin: 0 auto;
-
+            font-size: clamp(1rem, 2vw + .5rem, 1.25rem);
         }
         h1 {
             color: #ff0fa7;
@@ -24,7 +24,7 @@
         h2 {
             color: #000;
         }
-        h1, h3 {
+        h1, h4 {
             text-align: center;
         }
         a {
@@ -41,10 +41,14 @@
             padding: 10px;
             font-size: 10pt;
             color: #000;
+            overflow-x: auto;
         }
-
         footer {
             color: #ff0fa7;
+        }
+
+        @media (min-width: 48rem) {        /* ≈768 px */
+          body { font-size: 1.1rem; }
         }
     </style>
 </head>
