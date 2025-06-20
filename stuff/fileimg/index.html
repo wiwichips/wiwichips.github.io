@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Byte to Image Converter</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>File-to-Image Converter</h1>
+  <p>Upload a file to visualize its byte content as an image.</p>
+  <input type="file" id="fileInput" />
+  <canvas id="canvas"></canvas>
+
+  <script>
+    const fileInput = document.getElementById("fileInput");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    fileInput.addEventListener("change", async () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const arrayBuffer = await file.arrayBuffer();
+      const bytes = new Uint8Array(arrayBuffer);
+      const pixelCount = Math.floor(bytes.length / 4);
+
+      const width = Math.ceil(Math.sqrt(pixelCount));
+      const height = Math.ceil(pixelCount / width);
+
+      canvas.width = width;
+      canvas.height = height;
+
+      const imageData = ctx.createImageData(width, height);
+      const data = imageData.data;
+
+      for (let i = 0; i < pixelCount; i++) {
+        data[i * 4 + 0] = bytes[i * 4 + 0]; // R
+        data[i * 4 + 1] = bytes[i * 4 + 1]; // G
+        data[i * 4 + 2] = bytes[i * 4 + 2]; // B
+        data[i * 4 + 3] = bytes[i * 4 + 3]; // A
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+    });
+  </script>
+</body>
+</html>
+
