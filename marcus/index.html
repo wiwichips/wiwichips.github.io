@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Marcus — Hitchdeck</title>
+  <link rel="preload" as="image" href="./marcus.jpeg">
+  <style>
+    :root { --max: 720px; --pad: 16px; --bg: #0f0f12; --fg: #f4f4f6; --muted:#b9b9c2; --accent:#ff3b7f; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--fg); background: radial-gradient(1200px 800px at 50% -200px,#1a1a20,#0b0b0d), var(--bg);
+      display: flex; align-items: center; justify-content: center; padding: var(--pad);
+    }
+    .card {
+      width: 100%; max-width: var(--max); background: #141417; border: 1px solid #24242a; border-radius: 20px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.35); overflow: hidden;
+    }
+    header { padding: 20px 20px 0 20px; text-align: center; }
+    h1 { margin: 0 0 4px; font-size: clamp(24px, 6vw, 36px); letter-spacing: .2px; }
+    p.sub { margin: 0 0 16px; color: var(--muted); font-size: clamp(14px, 3.8vw, 16px); }
+    .hero {
+      display: block; width: 100%; aspect-ratio: 16/10; object-fit: cover; background:#222; border-top: 1px solid #222; border-bottom: 1px solid #222;
+    }
+    .content { padding: 20px; display: grid; gap: 16px; }
+    .btn {
+      display: inline-block; text-align: center; text-decoration: none; font-weight: 700;
+      background: var(--accent); color: white; border: none; border-radius: 16px;
+      padding: 18px 20px; width: 100%; font-size: clamp(18px, 5.5vw, 22px);
+      box-shadow: 0 8px 20px rgba(255,59,127,.25); touch-action: manipulation;
+    }
+    .links { display: grid; gap: 8px; }
+    .link a {
+      display: block; background: #1a1a1f; border: 1px solid #2a2a33; border-radius: 12px; padding: 14px 16px;
+      color: var(--fg); text-decoration: none; font-size: 16px;
+    }
+    footer { padding: 0 20px 20px 20px; text-align: center; color: var(--muted); font-size: 12px; }
+  </style>
+</head>
+<body data-page="home">
+  <main class="card">
+    <header>
+      <h1>Meet Marcus</h1>
+      <p class="sub">Certified catch. Uncertified quiz.</p>
+    </header>
+
+    <img src="./marcus.jpeg" alt="Marcus smiling hero photo" class="hero" />
+
+    <div class="content">
+      <a class="btn" href="./quiz.html">START MARCUS COMPATIBILITY QUIZ</a>
+
+      <section class="links" aria-label="Marcus links">
+        <div class="link"><a href="https://www.instagram.com/murkies.io/" target="_blank" rel="noopener">Instagram</a></div>
+        <div class="link"><a href="https://www.linkedin.com/in/marcusjardine/" target="_blank" rel="noopener">LinkedIn</a></div>
+        <div class="link"><a href="mailto:marcthelamb@gmail.com">Email Marcus</a></div>
+        <div class="link"><a href="">Discord: murkies</a></div>
+      </section>
+    </div>
+
+    <footer>Made for Hitchdeck • Mobile-friendly • It’s a gag quiz—have fun!</footer>
+  </main>
+</body>
+</html>
+
