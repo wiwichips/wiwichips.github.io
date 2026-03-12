@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your Kijiji Type</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --kijiji-green: #37a14a;
+      --kijiji-green-dark: #1e7b34;
+      --kijiji-yellow: #ffcf4a;
+      --kijiji-cream: #f6f3ea;
+      --kijiji-ink: #1f2a24;
+      --card: #ffffff;
+      --shadow: 0 12px 30px rgba(20, 60, 30, 0.14);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      color: var(--kijiji-ink);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(55, 161, 74, 0.18), transparent 45%),
+        radial-gradient(circle at 80% 20%, rgba(255, 207, 74, 0.2), transparent 40%),
+        linear-gradient(180deg, #fdfbf6 0%, #f0f7f1 100%);
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .card {
+      max-width: 720px;
+      width: 100%;
+      background: var(--card);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      border: 2px solid rgba(55, 161, 74, 0.15);
+      display: grid;
+      gap: 18px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(28px, 5vw, 40px);
+    }
+
+    p {
+      margin: 0;
+      color: #324338;
+      line-height: 1.5;
+    }
+
+    .image-wrap {
+      display: grid;
+      place-items: center;
+      background: #f8faf7;
+      border-radius: 16px;
+      padding: 18px;
+      border: 1px dashed rgba(55, 161, 74, 0.3);
+    }
+
+    .image-wrap img {
+      max-width: 260px;
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .listing {
+      margin-top: 6px;
+      background: #fffbe6;
+      border-radius: 14px;
+      padding: 14px;
+      border: 2px dashed rgba(255, 207, 74, 0.8);
+      font-weight: 600;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    a.button {
+      text-decoration: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-family: "Space Grotesk", sans-serif;
+      background: linear-gradient(120deg, var(--kijiji-green), #7bd96d);
+      color: white;
+      box-shadow: var(--shadow);
+    }
+
+    .scoreboard {
+      font-size: 13px;
+      color: #4a5a50;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div>
+      <h1 id="title">Your Kijiji Type</h1>
+      <p id="desc">Loading your result...</p>
+    </div>
+    <div class="image-wrap">
+      <img id="image" src="" alt="Personality image" />
+    </div>
+    <div class="listing" id="listing"></div>
+    <div class="scoreboard" id="scoreboard"></div>
+    <div class="actions">
+      <a class="button" href="index.html">Take it again</a>
+    </div>
+  </div>
+
+  <script>
+    const profiles = {
+      gangster: {
+        title: "Gangster",
+        description: "You are a hustle-powered collector of strange deals. You see a listing and immediately think: flip it, flex it, or scheme.",
+        listing: "Mystery duffel bag (no questions) — $40",
+        image: "gangster.png"
+      },
+      surfer: {
+        title: "Surfer",
+        description: "You ride the chaos. If it floats, rolls, or smells vaguely like sunscreen, you're in.",
+        listing: "Half-surfboard + full attitude — $25",
+        image: "surfer.png"
+      },
+      ghoul: {
+        title: "Ghoul",
+        description: "You thrive in the wasteland of weird listings. You value function, scrap, and the glow of questionable tech.",
+        listing: "Fallout-ready lantern (mildly warm) — $15",
+        image: "ghoul.png"
+      },
+      khajiit: {
+        title: "Khajiit",
+        description: "You are a collector of cozy chaos. You love shiny objects, plush mysteries, and anything cat-adjacent.",
+        listing: "Box of yarn + raccoon hat — $12",
+        image: "khajiit.png"
+      }
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get("type");
+    const scores = params.get("scores");
+    const profile = profiles[type] || profiles.surfer;
+
+    document.getElementById("title").textContent = `You are: ${profile.title}`;
+    document.getElementById("desc").textContent = profile.description;
+    document.getElementById("listing").textContent = `Suggested listing: ${profile.listing}`;
+    const imageEl = document.getElementById("image");
+    imageEl.src = profile.image;
+    imageEl.alt = profile.title;
+
+    if (scores) {
+      document.getElementById("scoreboard").textContent = `Scoreboard: ${scores}`;
+    }
+  </script>
+</body>
+</html>
