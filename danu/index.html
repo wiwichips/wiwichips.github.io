@@ -15,13 +15,10 @@
       --kijiji-cream: #f6f3ea;
       --kijiji-ink: #1f2a24;
       --card: #ffffff;
-      --accent: #0b7d3b;
       --shadow: 0 12px 30px rgba(20, 60, 30, 0.14);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -159,23 +156,15 @@
       transform: translateY(10px);
     }
 
-    .question:nth-child(odd) {
-      border-left: 4px solid var(--kijiji-green);
-    }
-
-    .question:nth-child(even) {
-      border-left: 4px solid var(--kijiji-yellow);
-    }
+    .question:nth-child(odd) { border-left: 4px solid var(--kijiji-green); }
+    .question:nth-child(even) { border-left: 4px solid var(--kijiji-yellow); }
 
     .question h3 {
       margin: 0 0 12px;
       font-size: 16px;
     }
 
-    .options {
-      display: grid;
-      gap: 8px;
-    }
+    .options { display: grid; gap: 8px; }
 
     label {
       display: grid;
@@ -232,57 +221,12 @@
       box-shadow: none;
     }
 
-    .result {
-      margin-top: 20px;
-      padding: 18px;
-      border-radius: 16px;
-      background: #fffbe6;
-      border: 2px dashed rgba(255, 207, 74, 0.8);
-      display: none;
-    }
-
-    .result h2 {
-      margin: 0 0 8px;
-      font-family: "Space Grotesk", sans-serif;
-    }
-
-    .listing {
-      margin-top: 12px;
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 14px;
-      border: 1px solid rgba(31, 42, 36, 0.12);
-    }
-
-    .listing-title {
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .listing-meta {
-      font-size: 13px;
-      color: #4a5a50;
-    }
-
-    footer {
-      text-align: center;
-      color: #4a5a50;
-      font-size: 13px;
-      padding: 10px 0 30px;
-    }
-
     @keyframes rise {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @media (min-width: 720px) {
-      .hero {
-        grid-template-columns: 1.2fr 0.8fr;
-        align-items: center;
-      }
+      .hero { grid-template-columns: 1.2fr 0.8fr; align-items: center; }
     }
   </style>
 </head>
@@ -300,17 +244,17 @@
   <section class="hero">
     <div>
       <h1>The Craziest Things You Can Find on Kijiji</h1>
-      <p>Pick your favorite questionable listings. We will diagnose your personality: <strong>Gangster</strong>, <strong>Surfer</strong>, <strong>Ghoul</strong>, or <strong>Kajeet</strong>.</p>
+      <p>Pick your favorite questionable listings. We will diagnose your personality: <strong>Gangster</strong>, <strong>Surfer</strong>, <strong>Ghoul</strong>, or <strong>Khajiit</strong>.</p>
     </div>
     <div class="hero-card">
-      <span class="tag">30-Minute Quiz Build</span>
-      <p>20 fast questions. 4 chaotic options each. Your result is decided by the weirdest stuff you would absolutely buy.</p>
+      <span class="tag">Lightning Round</span>
+      <p>13-ish fast questions. 4 chaotic options each. Your result is decided by the weirdest stuff you would absolutely buy.</p>
     </div>
   </section>
 
   <main>
     <div class="progress-meta">
-      <span id="progressText">0 / 20 answered</span>
+      <span id="progressText">0 / 13 answered</span>
       <span id="progressHint">Pick one option per card</span>
     </div>
     <div class="progress">
@@ -323,12 +267,15 @@
       <button class="primary" id="submitBtn" type="button">Reveal My Type</button>
       <button class="ghost" id="resetBtn" type="button">Reset Quiz</button>
     </div>
-
-    <section class="result" id="result"></section>
   </main>
 
-  <footer>
-    Built for the PowerPoint Party — scan the QR, pick your poison, and argue about the results.
+  <footer style="text-align:center;color:#4a5a50;font-size:13px;padding:10px 0 30px;">
+    <div>Built for the PowerPoint Party — scan the QR, pick your poison, and argue about the results.</div>
+    <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+      <a href="https://www.kijiji.ca/v-free-stuff/city-of-toronto/free-book-18-:-the-cathedral-loop/1720022057" target="_blank" rel="noopener">Free Book 18: The Cathedral Loop</a>
+      <a href="https://www.kijiji.ca/v-free-stuff/city-of-toronto/free-haircut/1711513754" target="_blank" rel="noopener">Free Haircut</a>
+      <a href="https://www.kijiji.ca/v-free-stuff/city-of-toronto/free-dental-cleaning/1732346354" target="_blank" rel="noopener">Free Dental Cleaning</a>
+    </div>
   </footer>
 
   <script>
@@ -339,7 +286,7 @@
           { text: "Snag it for your next street deal", w: { gangster: 2 } },
           { text: "Wear it at the beach, still sandy", w: { surfer: 2 } },
           { text: "Gnaw it post-apocalypse", w: { ghoul: 2 } },
-          { text: "Offer it to your cat friends", w: { kajeet: 2 } }
+          { text: "Offer it to your cat friends", w: { khajiit: 2 } }
         ]
       },
       {
@@ -348,7 +295,7 @@
           { text: "Keep it for the cover art flex", w: { gangster: 1, ghoul: 1 } },
           { text: "Trade it for a board leash", w: { surfer: 2 } },
           { text: "Use it as a radiation shield", w: { ghoul: 2 } },
-          { text: "Display it in your den", w: { kajeet: 2 } }
+          { text: "Display it in your den", w: { khajiit: 2 } }
         ]
       },
       {
@@ -357,7 +304,7 @@
           { text: "Hustle it at the corner", w: { gangster: 2 } },
           { text: "Watch it in a beach shack", w: { surfer: 1, gangster: 1 } },
           { text: "Archive it for the wasteland", w: { ghoul: 2 } },
-          { text: "Use it as a shiny coaster", w: { kajeet: 2 } }
+          { text: "Use it as a shiny coaster", w: { khajiit: 2 } }
         ]
       },
       {
@@ -366,7 +313,7 @@
           { text: "Flip it for quick cash", w: { gangster: 2 } },
           { text: "Turn it into a surf wax tin", w: { surfer: 2 } },
           { text: "Store your rad-away pills", w: { ghoul: 2 } },
-          { text: "Sleep in it. If it fits, it sits", w: { kajeet: 2 } }
+          { text: "Sleep in it. If it fits, it sits", w: { khajiit: 2 } }
         ]
       },
       {
@@ -375,7 +322,7 @@
           { text: "Sell it at an underground auction", w: { gangster: 2 } },
           { text: "Convert it into a wetsuit", w: { surfer: 2 } },
           { text: "Wear it to hide the ghoulish glow", w: { ghoul: 2 } },
-          { text: "Full Kajeet cosplay, no notes", w: { kajeet: 3 } }
+          { text: "Full Khajiit cosplay, no notes", w: { khajiit: 3 } }
         ]
       },
       {
@@ -384,7 +331,7 @@
           { text: "Threaten people with it", w: { gangster: 2 } },
           { text: "Use it for traction in a surf van", w: { surfer: 1 } },
           { text: "Mix it with scrap concrete", w: { ghoul: 1 } },
-          { text: "This is sacred to Kajeet", w: { kajeet: 3 } }
+          { text: "This is sacred to Khajiit", w: { khajiit: 3 } }
         ]
       },
       {
@@ -393,16 +340,7 @@
           { text: "Perfect for a beach heist", w: { gangster: 1, surfer: 1 } },
           { text: "Ride the ghost wave", w: { surfer: 3 } },
           { text: "Surf the nuclear tides", w: { ghoul: 2 } },
-          { text: "Claw marks make it grippy", w: { kajeet: 2 } }
-        ]
-      },
-      {
-        prompt: "Cargo pants with 47 pockets.",
-        options: [
-          { text: "Ideal for street inventory", w: { gangster: 2 } },
-          { text: "Store wax, snacks, and shells", w: { surfer: 2 } },
-          { text: "Hold your scavenged screws", w: { ghoul: 2 } },
-          { text: "Stuff with catnip", w: { kajeet: 2 } }
+          { text: "Claw marks make it grippy", w: { khajiit: 2 } }
         ]
       },
       {
@@ -411,7 +349,7 @@
           { text: "Use it for weird protein shakes", w: { gangster: 1, ghoul: 1 } },
           { text: "Make beach bonfire treats", w: { surfer: 2 } },
           { text: "Fuel the wasteland sugar rush", w: { ghoul: 2 } },
-          { text: "Fluffy snack for Kajeet", w: { kajeet: 2 } }
+          { text: "Fluffy snack for Khajiit", w: { khajiit: 2 } }
         ]
       },
       {
@@ -420,7 +358,7 @@
           { text: "Classic gangster accessory", w: { gangster: 2 } },
           { text: "Use it as a leash weight", w: { surfer: 1 } },
           { text: "Communicate with other ghouls", w: { ghoul: 2 } },
-          { text: "Shiny toy for the den", w: { kajeet: 2 } }
+          { text: "Shiny toy for the den", w: { khajiit: 2 } }
         ]
       },
       {
@@ -429,7 +367,7 @@
           { text: "Smoke screen for a getaway", w: { gangster: 2 } },
           { text: "Beach party upgrade", w: { surfer: 2 } },
           { text: "Finally, atmosphere", w: { ghoul: 3 } },
-          { text: "Chase the mist", w: { kajeet: 2 } }
+          { text: "Chase the mist", w: { khajiit: 2 } }
         ]
       },
       {
@@ -438,25 +376,7 @@
           { text: "Push it like a kingpin", w: { gangster: 2 } },
           { text: "Use it to haul boards", w: { surfer: 2 } },
           { text: "Perfect for scav runs", w: { ghoul: 2 } },
-          { text: "Royal Kajeet chariot", w: { kajeet: 2 } }
-        ]
-      },
-      {
-        prompt: "A 'lightly cursed' lava lamp.",
-        options: [
-          { text: "Mood lighting for the crew", w: { gangster: 1, surfer: 1 } },
-          { text: "Wave vibes only", w: { surfer: 2 } },
-          { text: "Summon the glow", w: { ghoul: 2 } },
-          { text: "Hypnotic laser pointer", w: { kajeet: 2 } }
-        ]
-      },
-      {
-        prompt: "A taxidermy seagull wearing sunglasses.",
-        options: [
-          { text: "Mascot for your squad", w: { gangster: 2 } },
-          { text: "Beach trophy", w: { surfer: 3 } },
-          { text: "Food storage?", w: { ghoul: 2 } },
-          { text: "Stealthy bird ally", w: { kajeet: 2 } }
+          { text: "Royal Khajiit chariot", w: { khajiit: 2 } }
         ]
       },
       {
@@ -465,16 +385,7 @@
           { text: "Keep it for negotiations", w: { gangster: 3 } },
           { text: "Use it to dry wetsuits", w: { surfer: 1 } },
           { text: "Wasteland-approved", w: { ghoul: 3 } },
-          { text: "Warm the den", w: { kajeet: 1 } }
-        ]
-      },
-      {
-        prompt: "A cool box labeled 'definitely not organs'.",
-        options: [
-          { text: "No questions asked", w: { gangster: 3 } },
-          { text: "Pack the beach snacks", w: { surfer: 1 } },
-          { text: "Preserve mystery meat", w: { ghoul: 2 } },
-          { text: "Smell test first", w: { kajeet: 2 } }
+          { text: "Warm the den", w: { khajiit: 1 } }
         ]
       },
       {
@@ -483,63 +394,19 @@
           { text: "Ride it anyway, respect", w: { gangster: 2 } },
           { text: "Surf-style land training", w: { surfer: 3 } },
           { text: "Scrap it for parts", w: { ghoul: 2 } },
-          { text: "Scratch post", w: { kajeet: 2 } }
-        ]
-      },
-      {
-        prompt: "An inflatable hot tub shaped like a taco.",
-        options: [
-          { text: "VIP lounge for the crew", w: { gangster: 2 } },
-          { text: "Beachhouse essential", w: { surfer: 2 } },
-          { text: "Boil dubious soup", w: { ghoul: 2 } },
-          { text: "Giant cat bed", w: { kajeet: 2 } }
-        ]
-      },
-      {
-        prompt: "A collection of 400 rubber ducks, lightly melted.",
-        options: [
-          { text: "Street art installation", w: { gangster: 2 } },
-          { text: "Float them in the bay", w: { surfer: 2 } },
-          { text: "Radiation test subjects", w: { ghoul: 2 } },
-          { text: "Duck army for Kajeet", w: { kajeet: 2 } }
-        ]
-      },
-      {
-        prompt: "A mysterious lockbox with 'Open in 2035' written on it.",
-        options: [
-          { text: "Open it tonight", w: { gangster: 3 } },
-          { text: "Bury it on the beach", w: { surfer: 2 } },
-          { text: "Wait it out in the vault", w: { ghoul: 2 } },
-          { text: "Bat it off the shelf", w: { kajeet: 2 } }
+          { text: "Scratch post", w: { khajiit: 2 } }
         ]
       }
     ];
 
     const personalities = {
-      gangster: {
-        title: "Gangster",
-        description: "You are a hustle-powered collector of strange deals. You see a listing and immediately think: flip it, flex it, or use it for a clever scheme.",
-        listing: "Mystery duffel bag (no questions) — $40"
-      },
-      surfer: {
-        title: "Surfer",
-        description: "You ride the chaos. If it floats, rolls, or smells vaguely like sunscreen, you're in. You turn junk into beach vibes.",
-        listing: "Half-surfboard + full attitude — $25"
-      },
-      ghoul: {
-        title: "Ghoul",
-        description: "You thrive in the wasteland of weird listings. You value function, scrap, and the glow of questionable tech.",
-        listing: "Fallout-ready lantern (mildly warm) — $15"
-      },
-      kajeet: {
-        title: "Kajeet",
-        description: "You are a collector of cozy chaos. You love shiny objects, plush mysteries, and anything remotely cat-adjacent.",
-        listing: "Box of yarn + raccoon hat — $12"
-      }
+      gangster: { title: "Gangster" },
+      surfer: { title: "Surfer" },
+      ghoul: { title: "Ghoul" },
+      khajiit: { title: "Khajiit" }
     };
 
     const quizEl = document.getElementById("quiz");
-    const resultEl = document.getElementById("result");
     const progressText = document.getElementById("progressText");
     const progressBar = document.getElementById("progressBar");
 
@@ -583,14 +450,12 @@
     }
 
     function calculateResult() {
-      const totals = { gangster: 0, surfer: 0, ghoul: 0, kajeet: 0 };
+      const totals = { gangster: 0, surfer: 0, ghoul: 0, khajiit: 0 };
       questions.forEach((question, index) => {
         const chosen = document.querySelector(`input[name='q${index}']:checked`);
         if (!chosen) return;
         const choice = question.options[Number(chosen.value)];
-        Object.entries(choice.w).forEach(([key, val]) => {
-          totals[key] += val;
-        });
+        Object.entries(choice.w).forEach(([key, val]) => { totals[key] += val; });
       });
       const winner = Object.entries(totals).sort((a, b) => b[1] - a[1])[0][0];
       return { winner, totals };
@@ -599,39 +464,25 @@
     document.getElementById("submitBtn").addEventListener("click", () => {
       const answered = document.querySelectorAll("input[type='radio']:checked").length;
       if (answered < questions.length) {
-        resultEl.style.display = "block";
-        resultEl.innerHTML = `<h2>Finish the quiz first</h2><p>You answered ${answered} of ${questions.length} questions. Pick one option per card.</p>`;
-        resultEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        alert(`You answered ${answered} of ${questions.length}. Pick one option per card.`);
         return;
       }
 
       const { winner, totals } = calculateResult();
-      const profile = personalities[winner];
       const sorted = Object.entries(totals)
         .sort((a, b) => b[1] - a[1])
         .map(([key, value]) => `${personalities[key].title}: ${value}`)
         .join(" | ");
 
-      resultEl.style.display = "block";
-      resultEl.innerHTML = `
-        <h2>You are: ${profile.title}</h2>
-        <p>${profile.description}</p>
-        <div class="listing">
-          <div class="listing-title">Suggested listing:</div>
-          <div class="listing-meta">${profile.listing}</div>
-        </div>
-        <p class="listing-meta" style="margin-top: 12px;">Scoreboard: ${sorted}</p>
-      `;
-      resultEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      const url = new URL("result.html", window.location.href);
+      url.searchParams.set("type", winner);
+      url.searchParams.set("scores", sorted);
+      window.location.href = url.toString();
     });
 
     document.getElementById("resetBtn").addEventListener("click", () => {
-      document.querySelectorAll("input[type='radio']").forEach((input) => {
-        input.checked = false;
-      });
+      document.querySelectorAll("input[type='radio']").forEach((input) => { input.checked = false; });
       updateProgress();
-      resultEl.style.display = "none";
-      resultEl.innerHTML = "";
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
