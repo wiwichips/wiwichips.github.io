@@ -94,6 +94,13 @@
     perspective: 1000px; /* Enables 3D perspective */
 }
 
+.pdf-link {
+    display: block;
+    width: 100%;
+    cursor: pointer;
+    text-decoration: none;
+}
+
 .pdf-frame {
     border: none; /* Remove border */
     width: 100%;
@@ -102,7 +109,17 @@
     transition: transform 0.6s ease, box-shadow 0.6s ease;
 }
 
-.pdf-wrapper:hover .pdf-frame {
+#pdf-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: none;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transition: transform 0.6s ease, box-shadow 0.6s ease;
+}
+
+.pdf-wrapper:hover .pdf-frame,
+.pdf-wrapper:hover #pdf-canvas {
     box-shadow: 0 0px 40px rgba(10, 173, 10, 1); /* Enhanced shadow on hover */
 }
 
@@ -145,23 +162,35 @@
 
         <!--<embed src="../resume/resume.pdf" type="application/pdf">-->
         <div class="pdf-wrapper">
-            <iframe src="https://willpringle.ca/resume/resume.pdf#toolbar=0&navpanes=0&scrollbar=0" class="pdf-frame"></iframe>
+            <a class="pdf-link" href="./resume/resume.pdf" target="_blank" rel="noopener">
+                <canvas id="pdf-canvas" class="pdf-frame"></canvas>
+            </a>
         </div>
 
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
         const canvas = document.getElementById('grainCanvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
         const dpr = window.devicePixelRatio || 1;
         let mouseX = 0, mouseY = 0;
         let drawInterval = -1;
+        let pendingFrame = false;
+        let pdfRenderPending = false;
+        let pdfDoc = null;
+        let pdfPage = null;
+        let pdfRenderTask = null;
+        const pdfUrl = 'https://willpringle.ca/resume/resume.pdf';
+        const pdfCanvas = document.getElementById('pdf-canvas');
 
         function resizeCanvas() {
             canvas.width = window.innerWidth * dpr;
             canvas.height = window.innerHeight * dpr;
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
             ctx.scale(dpr, dpr);
             drawBackground();
+            schedulePdfRender();
         }
 
         function drawBlobs() {
@@ -219,11 +248,77 @@
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            drawBackground();
+            if (pendingFrame) return;
+            pendingFrame = true;
+            requestAnimationFrame(() => {
+                pendingFrame = false;
+                drawBackground();
+            });
         });
 
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
+
+        if (window.pdfjsLib && pdfCanvas) {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+
+        function schedulePdfRender() {
+            if (!pdfCanvas || !window.pdfjsLib || pdfRenderPending) return;
+            pdfRenderPending = true;
+            requestAnimationFrame(() => {
+                pdfRenderPending = false;
+                renderPdf();
+            });
+        }
+
+        function ensurePdfLoaded() {
+            if (!window.pdfjsLib || pdfDoc) return Promise.resolve(pdfDoc);
+            return pdfjsLib.getDocument(pdfUrl).promise
+                .then((doc) => {
+                    pdfDoc = doc;
+                    return pdfDoc.getPage(1);
+                })
+                .then((page) => {
+                    pdfPage = page;
+                    return pdfDoc;
+                });
+        }
+
+        function renderPdf() {
+            if (!pdfCanvas || !window.pdfjsLib) return;
+            ensurePdfLoaded()
+                .then(() => {
+                    if (!pdfPage) return;
+                    const containerWidth = pdfCanvas.parentElement.clientWidth || 800;
+                    const viewport = pdfPage.getViewport({ scale: 1 });
+                    const scale = containerWidth / viewport.width;
+                    const scaledViewport = pdfPage.getViewport({ scale });
+                    const outputScale = window.devicePixelRatio || 1;
+
+                    pdfCanvas.width = Math.floor(scaledViewport.width * outputScale);
+                    pdfCanvas.height = Math.floor(scaledViewport.height * outputScale);
+                    pdfCanvas.style.width = `${scaledViewport.width}px`;
+                    pdfCanvas.style.height = `${scaledViewport.height}px`;
+
+                    const pdfCtx = pdfCanvas.getContext('2d', { alpha: false });
+                    if (pdfCtx) {
+                        pdfCtx.setTransform(1, 0, 0, 1, 0, 0);
+                        pdfCtx.fillStyle = '#ffffff';
+                        pdfCtx.fillRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+                    }
+
+                    if (pdfRenderTask) {
+                        try { pdfRenderTask.cancel(); } catch (_) {}
+                    }
+                    const transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+                    pdfRenderTask = pdfPage.render({ canvasContext: pdfCtx, viewport: scaledViewport, transform });
+                    return pdfRenderTask.promise;
+                })
+                .catch(() => {});
+        }
+
+        schedulePdfRender();
 
         const colors = ['#FF5733', '#33FF57', '#5733FF', '#FF33D9', '#D9FF33', '#33D9FF'];
 
@@ -235,4 +330,3 @@
     </script>
 </body>
 </html>
-
