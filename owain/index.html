@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Album Player</title>
+  <style>
+    :root {
+      --case-size: min(68vw, 420px);
+      --case-depth: 22px;
+      --accent: #ff8a00;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(255, 138, 0, 0.08), transparent 34%),
+        #000;
+      font-family: Arial, Helvetica, sans-serif;
+      overflow: hidden;
+    }
+
+    .stage {
+      width: 100%;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      perspective: 950px;
+      perspective-origin: 50% 45%;
+      padding: 32px;
+    }
+
+    .layout {
+      display: grid;
+      justify-items: center;
+      gap: 28px;
+    }
+
+    .case-wrap {
+      width: var(--case-size);
+      height: var(--case-size);
+      display: grid;
+      place-items: center;
+      transform-style: preserve-3d;
+      will-change: transform;
+      transform: rotateY(-18deg);
+    }
+
+    .case {
+      position: relative;
+      width: var(--case-size);
+      height: var(--case-size);
+      transform-style: preserve-3d;
+      transform: rotateX(-3deg);
+      cursor: pointer;
+    }
+
+    .case::before {
+      content: "";
+      position: absolute;
+      inset: -18px;
+      transform: translateZ(-24px);
+      border-radius: 18px;
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.72), transparent 68%);
+      pointer-events: none;
+    }
+
+    .case:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 12px;
+    }
+
+    .face,
+    .side {
+      position: absolute;
+      backface-visibility: visible;
+      border-radius: 9px;
+      overflow: hidden;
+    }
+
+    .face {
+      inset: 0;
+      background: #111;
+      border: 1px solid rgba(255, 255, 255, 0.26);
+      box-shadow:
+        inset 0 0 24px rgba(255, 255, 255, 0.11),
+        inset 0 0 2px rgba(255, 255, 255, 0.7),
+        0 18px 40px rgba(0, 0, 0, 0.75);
+    }
+
+    .face img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .front {
+      transform: translateZ(calc(var(--case-depth) / 2));
+    }
+
+    .back {
+      transform: rotateY(180deg) translateZ(calc(var(--case-depth) / 2));
+    }
+
+    .front::before,
+    .back::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(115deg, rgba(255, 255, 255, 0.34), transparent 20%, transparent 46%, rgba(255, 255, 255, 0.15) 51%, transparent 58%),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.16), transparent 9%, transparent 91%, rgba(255, 255, 255, 0.1)),
+        radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.24), transparent 24%);
+      mix-blend-mode: screen;
+      opacity: 0.8;
+    }
+
+    .front::after {
+      content: "";
+      position: absolute;
+      top: 4%;
+      bottom: 4%;
+      left: 7%;
+      width: 2px;
+      background: rgba(255, 255, 255, 0.28);
+      box-shadow:
+        5px 0 0 rgba(0, 0, 0, 0.18),
+        12px 0 18px rgba(255, 255, 255, 0.15);
+      pointer-events: none;
+    }
+
+    .side {
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.35), rgba(90, 90, 90, 0.28), rgba(255, 255, 255, 0.2)),
+        rgba(28, 28, 28, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.08);
+    }
+
+    .right {
+      width: var(--case-depth);
+      height: var(--case-size);
+      left: calc(50% - var(--case-depth) / 2);
+      top: 0;
+      transform: rotateY(90deg) translateZ(calc(var(--case-size) / 2));
+      transform-origin: center center;
+    }
+
+    .left {
+      width: var(--case-depth);
+      height: var(--case-size);
+      left: calc(50% - var(--case-depth) / 2);
+      top: 0;
+      transform: rotateY(-90deg) translateZ(calc(var(--case-size) / 2));
+      transform-origin: center center;
+    }
+
+    .top {
+      width: var(--case-size);
+      height: var(--case-depth);
+      left: 0;
+      top: calc(50% - var(--case-depth) / 2);
+      transform: rotateX(90deg) translateZ(calc(var(--case-size) / 2));
+      transform-origin: center center;
+    }
+
+    .bottom {
+      width: var(--case-size);
+      height: var(--case-depth);
+      left: 0;
+      top: calc(50% - var(--case-depth) / 2);
+      transform: rotateX(-90deg) translateZ(calc(var(--case-size) / 2));
+      transform-origin: center center;
+    }
+
+    .case.is-playing .front,
+    .case.is-playing .back {
+      box-shadow:
+        inset 0 0 24px rgba(255, 255, 255, 0.11),
+        inset 0 0 2px rgba(255, 255, 255, 0.7),
+        0 18px 40px rgba(0, 0, 0, 0.75),
+        0 0 22px rgba(255, 138, 0, 0.18);
+    }
+
+    .tap-hand {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: min(50vw, 460px);
+      height: auto;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate3d(35vw, 110vh, 0) rotate(-6deg);
+      will-change: transform, opacity;
+    }
+
+    .tap-hand.is-animating {
+      animation: handTapCue 2.8s ease-in-out forwards;
+    }
+
+    @keyframes handTapCue {
+      0% {
+        opacity: 0;
+        transform: translate3d(var(--hand-x), 110vh, 0) rotate(-6deg);
+      }
+
+      18% {
+        opacity: 0.95;
+      }
+
+      48% {
+        opacity: 0.95;
+        transform: translate3d(var(--hand-x), var(--hand-y), 0) rotate(-6deg);
+      }
+
+      58% {
+        opacity: 0.95;
+        transform: translate3d(var(--hand-x), calc(var(--hand-y) + 16px), 0) rotate(-6deg) scale(0.97);
+      }
+
+      70% {
+        opacity: 0.95;
+        transform: translate3d(var(--hand-x), var(--hand-y), 0) rotate(-6deg);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate3d(var(--hand-x), 110vh, 0) rotate(-6deg);
+      }
+    }
+
+    .soundcloud-note {
+      margin: 0;
+      color: var(--accent);
+      font-size: 13px;
+      line-height: 1.4;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+    }
+
+    .soundcloud-note a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .soundcloud-note a:hover,
+    .soundcloud-note a:focus-visible {
+      color: #ffb257;
+    }
+
+    @media (max-width: 520px) {
+      :root {
+        --case-size: min(82vw, 360px);
+        --case-depth: 18px;
+      }
+
+      .stage {
+        padding: 20px;
+      }
+
+      .tap-hand {
+        width: 58vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <div class="layout">
+      <div class="case-wrap" id="caseWrap">
+        <div class="case" id="albumCase" role="button" tabindex="0" aria-label="Play or pause album">
+          <div class="face front">
+            <img src="frog_album_front.png" alt="" draggable="false" />
+          </div>
+
+          <div class="face back">
+            <img src="frog_album_back.png" alt="" draggable="false" />
+          </div>
+
+          <div class="side right"></div>
+          <div class="side left"></div>
+          <div class="side top"></div>
+          <div class="side bottom"></div>
+        </div>
+      </div>
+
+      <p class="soundcloud-note">
+        Listen on
+        <a href="https://soundcloud.com/user-865737525/flip-frog-splashpad-mix/s-sKy0HaHNam2?si=743fd82b65dd409bb281adfb680036f4&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" target="_blank" rel="noopener noreferrer">Soundcloud</a>
+      </p>
+    </div>
+  </main>
+
+  <img class="tap-hand" id="tapHand" src="finger_click.png" alt="" aria-hidden="true" draggable="false" />
+
+  <audio id="albumAudio" src="mix.mp3" preload="metadata"></audio>
+
+  <script>
+    const caseWrap = document.getElementById('caseWrap');
+    const albumCase = document.getElementById('albumCase');
+    const tapHand = document.getElementById('tapHand');
+    const audio = document.getElementById('albumAudio');
+
+    let isPlaying = false;
+    let spin = -18;
+    let lastTimestamp = null;
+    let animationFrame = null;
+    let hasUserStartedPlayback = false;
+    let startupCueHasRun = false;
+
+    const degreesPerSecond = 20;
+
+    function render() {
+      spin = spin % 360;
+      caseWrap.style.transform = `rotateY(${spin}deg)`;
+    }
+
+    function animate(timestamp) {
+      if (!isPlaying) {
+        animationFrame = null;
+        lastTimestamp = null;
+        return;
+      }
+
+      if (lastTimestamp === null) {
+        lastTimestamp = timestamp;
+      }
+
+      const elapsedSeconds = (timestamp - lastTimestamp) / 1000;
+      lastTimestamp = timestamp;
+
+      spin += degreesPerSecond * elapsedSeconds;
+      render();
+
+      animationFrame = requestAnimationFrame(animate);
+    }
+
+    async function togglePlayback() {
+      hasUserStartedPlayback = true;
+
+      if (audio.paused) {
+        try {
+          await audio.play();
+        } catch (error) {
+          console.error('Audio playback was blocked or failed:', error);
+        }
+      } else {
+        audio.pause();
+      }
+    }
+
+    function startRotation() {
+      isPlaying = true;
+      albumCase.classList.add('is-playing');
+
+      if (animationFrame === null) {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    }
+
+    function stopRotation() {
+      isPlaying = false;
+      albumCase.classList.remove('is-playing');
+      lastTimestamp = null;
+    }
+
+    function runStartupHandCue() {
+      if (startupCueHasRun || hasUserStartedPlayback || !audio.paused) {
+        return;
+      }
+
+      startupCueHasRun = true;
+
+      const rect = albumCase.getBoundingClientRect();
+      const handWidth = tapHand.offsetWidth || window.innerWidth * 0.5;
+      const tapPointX = rect.left + rect.width * 0.5;
+      const tapPointY = rect.top + rect.height * 0.55;
+      const handX = tapPointX - handWidth * 0.08;
+      const handY = tapPointY - handWidth * 0.08;
+
+      tapHand.style.setProperty('--hand-x', `${handX}px`);
+      tapHand.style.setProperty('--hand-y', `${handY}px`);
+
+      tapHand.classList.remove('is-animating');
+      void tapHand.offsetWidth;
+      tapHand.classList.add('is-animating');
+
+      window.setTimeout(() => {
+        if (audio.paused) {
+          albumCase.click();
+        }
+      }, 1600);
+
+      tapHand.addEventListener('animationend', () => {
+        tapHand.classList.remove('is-animating');
+      }, { once: true });
+    }
+
+    albumCase.addEventListener('click', togglePlayback);
+
+    albumCase.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        togglePlayback();
+      }
+    });
+
+    audio.addEventListener('play', startRotation);
+    audio.addEventListener('pause', stopRotation);
+    audio.addEventListener('ended', stopRotation);
+
+    window.addEventListener('load', () => {
+      window.setTimeout(runStartupHandCue, 2000);
+    });
+
+    render();
+  </script>
+</body>
+</html>
